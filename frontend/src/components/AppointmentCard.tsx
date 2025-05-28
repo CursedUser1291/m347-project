@@ -1,58 +1,465 @@
-import {Card, CardContent, Typography, Input, Box, Grid} from '@mui/joy';
+import React, { useState } from 'react';
+import { LocationOn, Key, Lock, Visibility, Check, ContentCopy, Close, Edit, AccessTime } from '@mui/icons-material';
+import { Card, CardContent, Typography, Input, Box, Chip, Button, Modal, ModalDialog, IconButton, Divider, FormControl, FormLabel, Textarea } from '@mui/joy';
 
 export function AppointmentCard() {
+    const theme = {
+        card: {
+            background: '#ffffff',
+            text: '#333333',
+            border: '1px solid #e0e0e0',
+        },
+        editCard: {
+            background: '#f5f5f5',
+            text: '#333333',
+        },
+        chip: {
+            background: 'transparent',
+            border: '1px solid #44b9ca',
+            text: '#44b9ca',
+        },
+        input: {
+            background: '#ffffff',
+            text: '#333333',
+        }
+    };
 
-return (
-<Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
-    <Box>
-        <Card>
-            <CardContent>
-                <Grid
-                    container
-                    rowSpacing={1}
-                    width="400px"
+
+    const location = 'Room 101';
+    const title = 'Team Meeting';
+    const camera = false;
+    const beamer = true;
+    const touchscreen = true;
+    const whiteboard = true;
+    const comment = 'Discuss project updates and next steps.';
+    const formattedDate = '2024-06-10';
+    const time = '14:30';
+    const participants = 'Alice, Bob, Charlie';
+    const publicKey = 'public-key-123';
+    const privateKey = 'private-key-abc';
+
+    const [keyModalOpen, setKeyModalOpen] = useState(false);
+    const [editModalOpen, setEditModalOpen] = useState(false);
+    const [showKey, setShowKey] = useState(false);
+    const [copied, setCopied] = useState(false);
+
+    function formatTimeTo12Hour(timeStr: string) {
+        const [hour, minute] = timeStr.split(':').map(Number);
+        const ampm = hour >= 12 ? 'PM' : 'AM';
+        const hour12 = hour % 12 || 12;
+        return `${hour12}:${minute.toString().padStart(2, '0')} ${ampm}`;
+    }
+
+    function handleCopy() {
+        navigator.clipboard.writeText(publicKey);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1500);
+    }
+
+    return (
+        <Box sx={{ p: 2, maxWidth: '800px', mx: 'auto' }}>
+            {/* Main container with single card layout */}
+            <Card
+                sx={{
+                    width: '100%',
+                    bgcolor: theme.card.background,
+                    color: theme.card.text,
+                    border: theme.card.border,
+                    borderRadius: "8px",
+                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                    overflow: 'hidden',
+                    display: 'flex',
+                    flexDirection: 'column',
+                }}
+            >
+                <CardContent sx={{ p: 3 }}>
+                    <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2, alignItems: 'center' }}>
+                        <Box sx={{ display: "flex", gap: 1 }}>
+                            <Chip 
+                                size="sm" 
+                                variant="outlined" 
+                                startDecorator={<LocationOn />}
+                                sx={{
+                                    borderColor: theme.chip.border,
+                                    color: theme.chip.text,
+                                }}
+                            >
+                                {location}
+                            </Chip>
+                            {camera && (
+                                <Chip 
+                                    size="sm" 
+                                    variant="outlined"
+                                    sx={{
+                                        borderColor: theme.chip.border,
+                                        color: theme.chip.text,
+                                    }}
+                                >
+                                    Camera
+                                </Chip>
+                            )}
+                            {beamer && (
+                                <Chip 
+                                    size="sm" 
+                                    variant="outlined"
+                                    sx={{
+                                        borderColor: theme.chip.border,
+                                        color: theme.chip.text,
+                                    }}
+                                >
+                                    Beamer
+                                </Chip>
+                            )}
+                            {touchscreen && (
+                                <Chip 
+                                    size="sm" 
+                                    variant="outlined"
+                                    sx={{
+                                        borderColor: theme.chip.border,
+                                        color: theme.chip.text,
+                                    }}
+                                >
+                                    Touchscreen
+                                </Chip>
+                            )}
+                            {whiteboard && (
+                                <Chip 
+                                    size="sm" 
+                                    variant="outlined"
+                                    sx={{
+                                        borderColor: theme.chip.border,
+                                        color: theme.chip.text,
+                                    }}
+                                >
+                                    Whiteboard
+                                </Chip>
+                            )}
+                        </Box>
+                        <Button 
+                            size="sm" 
+                            variant="outlined" 
+                            startDecorator={<Edit />}
+                            onClick={() => setEditModalOpen(true)}
+                            sx={{ color: theme.chip.text }}
+                        >
+                            Edit
+                        </Button>
+                    </Box>
+
+                    <Typography level="h4" sx={{ mb: 2, fontWeight: 'bold' }}>
+                        {title}
+                    </Typography>
+
+                    <Typography level="body-md" sx={{ mb: 3 }}>
+                        {comment}
+                    </Typography>
+
+                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 4, mb: 3 }}>
+                        <Box>
+                            <Typography level="body-sm" sx={{ mb: 1, fontWeight: 'bold' }}>
+                                Participants
+                            </Typography>
+                            <Typography level="body-md">
+                                {participants}
+                            </Typography>
+                        </Box>
+
+                        <Box>
+                            <Typography level="body-sm" sx={{ mb: 1, fontWeight: 'bold' }}>
+                                Date
+                            </Typography>
+                            <Typography level="body-md">
+                                {formattedDate}
+                            </Typography>
+                        </Box>
+
+                        <Box>
+                            <Typography level="body-sm" sx={{ mb: 1, fontWeight: 'bold' }}>
+                                Time
+                            </Typography>
+                            <Typography level="body-md">
+                                {formatTimeTo12Hour(time)}
+                            </Typography>
+                        </Box>
+                    </Box>
+
+                    <Divider sx={{ my: 2 }} />
+
+                    <Typography level="title-sm" sx={{ mb: 2, textTransform: 'uppercase' }}>
+                        Room Keys
+                    </Typography>
+
+                    <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
+                        <Box sx={{ flex: 1, minWidth: '250px', bgcolor: 'rgba(0,0,0,0.05)', p: 2, borderRadius: '8px' }}>
+                            <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+                                <Typography level="body-sm" fontWeight="md">
+                                    <Key fontSize="small" sx={{ mr: 1, verticalAlign: 'middle' }} /> 
+                                    Public Key
+                                </Typography>
+                                <Button 
+                                    size="sm" 
+                                    variant="outlined" 
+                                    onClick={handleCopy} 
+                                    startDecorator={copied ? <Check /> : <ContentCopy />}
+                                    sx={{ color: theme.chip.text }}
+                                >
+                                    {copied ? 'Copied' : 'Copy'}
+                                </Button>
+                            </Box>
+                            <Typography sx={{ fontFamily: 'monospace', p: 1, bgcolor: 'rgba(0,0,0,0.05)', borderRadius: '4px' }}>
+                                {publicKey}
+                            </Typography>
+                        </Box>
+
+                        <Box sx={{ flex: 1, minWidth: '250px', bgcolor: 'rgba(0,0,0,0.05)', p: 2, borderRadius: '8px' }}>
+                            <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+                                <Typography level="body-sm" fontWeight="md">
+                                    <Lock fontSize="small" sx={{ mr: 1, verticalAlign: 'middle' }} /> 
+                                    Private Key
+                                </Typography>
+                                <Button 
+                                    size="sm" 
+                                    variant="outlined" 
+                                    onClick={() => setKeyModalOpen(true)} 
+                                    startDecorator={<Visibility />}
+                                    sx={{ color: theme.chip.text }}
+                                >
+                                    Reveal
+                                </Button>
+                            </Box>
+                            <Typography sx={{ fontFamily: 'monospace', p: 1, bgcolor: 'rgba(0,0,0,0.05)', borderRadius: '4px' }}>
+                                ••••••••••••••••••••••••••••
+                            </Typography>
+                        </Box>
+                    </Box>
+                </CardContent>
+
+                <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    px={3}
+                    py={2}
+                    bgcolor="rgba(0,0,0,0.05)"
+                    mt="auto"
                 >
-                    <Grid xs={6}>
-                        <Typography level="title-md">Date</Typography>
-                    </Grid>
-                    <Grid xs={6}>
-                        <Input readOnly={true} />
-                    </Grid>
-                    <Grid xs={6}>
-                        <Typography level="title-md">Time</Typography>
-                    </Grid>
-                    <Grid xs={6}>
-                        <Input readOnly={true} />
-                    </Grid>
-                    <Grid xs={6}>
-                        <Typography level="title-md">Description</Typography>
-                    </Grid>
-                    <Grid xs={6}>
-                        <Input readOnly={true} />
-                    </Grid>
-                    <Grid xs={6}>
-                        <Typography level="title-md">Participants</Typography>
-                    </Grid>
-                    <Grid xs={6}>
-                        <Input readOnly={true}/>
-                    </Grid>
-                    <Grid xs={6}>
-                        <Typography level="title-md">Public-Key</Typography>
-                    </Grid>
-                    <Grid xs={6}>
-                        <Input readOnly={true} />
-                    </Grid>
-                    <Grid xs={6}>
-                        <Typography level="title-md">Private-Key</Typography>
-                    </Grid>
-                    <Grid xs={6}>
-                        <Input readOnly={true} />
-                    </Grid>
-                </Grid>
-            </CardContent>
-        </Card>
-    </Box>
-</Box>
-);
+                    <Typography level="body-sm">
+                        <AccessTime sx={{ fontSize: 16, mr: 1, verticalAlign: 'text-bottom' }} />
+                        Created: 2023-06-15
+                    </Typography>
+                </Box>
+            </Card>
+
+            {/* Modal for Private Key */}
+            <Modal 
+                open={keyModalOpen} 
+                onClose={() => { setKeyModalOpen(false); setShowKey(false); }}
+                sx={{ 
+                    '& .MuiModalDialog-root': { 
+                        bgcolor: theme.card.background,
+                        color: theme.card.text,
+                        border: theme.card.border,
+                    }
+                }}
+            >
+                <ModalDialog>
+                    <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                        <Typography level="title-md">Private Key Access</Typography>
+                        <IconButton variant="plain" onClick={() => { setKeyModalOpen(false); setShowKey(false); }}>
+                            <Close />
+                        </IconButton>
+                    </Box>
+                    <Typography level="body-sm" mb={2}>
+                        For security reasons, please enter your password to reveal the private key.
+                    </Typography>
+                    <Input 
+                        type="password" 
+                        placeholder="Enter your password" 
+                        fullWidth 
+                        sx={{ 
+                            mb: 2,
+                            bgcolor: theme.input.background,
+                            color: theme.input.text,
+                            '--Input-focusedHighlight': 'white',
+                        }} 
+                    />
+                    {showKey && (
+                        <Typography sx={{ 
+                            fontFamily: 'monospace', 
+                            bgcolor: 'rgba(0,0,0,0.05)', 
+                            p: 1.5, 
+                            borderRadius: '4px', 
+                            mb: 2 
+                        }}>
+                            {privateKey}
+                        </Typography>
+                    )}
+                    <Box display="flex" justifyContent="flex-end" gap={1}>
+                        <Button 
+                            variant="outlined" 
+                            color="neutral"
+                            onClick={() => { setKeyModalOpen(false); setShowKey(false); }}
+                        >
+                            Cancel
+                        </Button>
+                        <Button 
+                            onClick={() => setShowKey(true)} 
+                            variant="solid"
+                        >
+                            Reveal Key
+                        </Button>
+                    </Box>
+                </ModalDialog>
+            </Modal>
+
+            {/* Modal for Edit Appointment */}
+            <Modal 
+                open={editModalOpen} 
+                onClose={() => setEditModalOpen(false)}
+                sx={{ 
+                    '& .MuiModalDialog-root': { 
+                        bgcolor: theme.editCard.background,
+                        color: theme.editCard.text,
+                        border: theme.card.border,
+                        maxWidth: '600px',
+                        width: '100%',
+                    }
+                }}
+            >
+                <ModalDialog>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                        <Typography level="h4">
+                            Edit Appointment
+                        </Typography>
+                        <IconButton variant="plain" onClick={() => setEditModalOpen(false)}>
+                            <Close />
+                        </IconButton>
+                    </Box>
+
+                    <FormControl sx={{ mb: 2 }}>
+                        <FormLabel>Title</FormLabel>
+                        <Input 
+                            value={title}
+                            sx={{ 
+                                bgcolor: theme.input.background,
+                                color: theme.input.text,
+                                '--Input-focusedHighlight': 'white',
+                            }}
+                        />
+                    </FormControl>
+
+                    <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
+                        <FormControl sx={{ flex: 1 }}>
+                            <FormLabel>Date</FormLabel>
+                            <Input 
+                                value={formattedDate}
+                                sx={{ 
+                                    bgcolor: theme.input.background,
+                                    color: theme.input.text,
+                                    '--Input-focusedHighlight': 'white',
+                                }}
+                            />
+                        </FormControl>
+
+                        <FormControl sx={{ flex: 1 }}>
+                            <FormLabel>Time</FormLabel>
+                            <Input 
+                                value={time}
+                                sx={{ 
+                                    bgcolor: theme.input.background,
+                                    color: theme.input.text,
+                                    '--Input-focusedHighlight': 'white',
+                                }}
+                            />
+                        </FormControl>
+                    </Box>
+
+                    <FormControl sx={{ mb: 2 }}>
+                        <FormLabel>Location</FormLabel>
+                        <Input 
+                            value={location}
+                            sx={{ 
+                                bgcolor: theme.input.background,
+                                color: theme.input.text,
+                                '--Input-focusedHighlight': 'white',
+                            }}
+                        />
+                    </FormControl>
+
+
+
+                    <FormControl sx={{ mb: 2 }}>
+                        <FormLabel>Description</FormLabel>
+                        <Textarea 
+                            minRows={3}
+                            value={comment}
+                            sx={{ 
+                                bgcolor: theme.input.background,
+                                color: theme.input.text,
+                                '--Textarea-focusedHighlight': 'white',
+                            }}
+                        />
+                    </FormControl>
+
+                    <FormControl sx={{ mb: 2 }}>
+                        <FormLabel>Participants</FormLabel>
+                        <Input 
+                            value={participants}
+                            sx={{ 
+                                bgcolor: theme.input.background,
+                                color: theme.input.text,
+                                '--Input-focusedHighlight': 'white',
+                            }}
+                        />
+                    </FormControl>
+
+                    <Divider sx={{ my: 2 }} />
+
+                    <Typography level="title-sm" sx={{ mb: 2, textTransform: 'uppercase' }}>
+                        Room Keys
+                    </Typography>
+
+                    <FormControl sx={{ mb: 2 }}>
+                        <FormLabel>Public Key</FormLabel>
+                        <Input 
+                            value={publicKey}
+                            sx={{ 
+                                bgcolor: theme.input.background,
+                                color: theme.input.text,
+                                '--Input-focusedHighlight': 'white',
+                                fontFamily: 'monospace'
+                            }}
+                        />
+                    </FormControl>
+
+                    <FormControl sx={{ mb: 3 }}>
+                        <FormLabel>Private Key</FormLabel>
+                        <Input 
+                            type="password"
+                            value={privateKey}
+                            sx={{ 
+                                bgcolor: theme.input.background,
+                                color: theme.input.text,
+                                '--Input-focusedHighlight': 'white',
+                                fontFamily: 'monospace'
+                            }}
+                        />
+                    </FormControl>
+
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+                        <Button 
+                            variant="outlined" 
+                            color="neutral" 
+                            onClick={() => setEditModalOpen(false)}
+                        >
+                            Cancel
+                        </Button>
+                        <Button variant="solid">Save Changes</Button>
+                    </Box>
+                </ModalDialog>
+            </Modal>
+        </Box>
+    );
 }
+
 export default AppointmentCard;
