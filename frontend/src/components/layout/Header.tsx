@@ -29,10 +29,14 @@
             boxSizing: 'border-box',
           }}
         >
-          {/* Page title - could be dynamic based on current route */}
-          <Typography level="title-lg" sx={{ display: { xs: 'none', sm: 'block' } }}>
-            Dashboard
-          </Typography>
+            <Typography
+                level="title-lg"
+                sx={{ display: { xs: 'none', sm: 'block' } }}
+                onClick={() => (window.location.href = '/')}
+                style={{ cursor: 'pointer' }}
+            >
+                Dashboard
+            </Typography>
 
           {/* Search bar */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexGrow: 1, mx: 3 }}>
