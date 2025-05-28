@@ -35,6 +35,7 @@ public class ReservationsSeeder implements CommandLineRunner {
             Optional<User> user2 = userRepository.findAll().stream().skip(1).findFirst();
             Optional<Room> room1 = roomRepository.findAll().stream().findFirst();
             Optional<Room> room2 = roomRepository.findAll().stream().skip(1).findFirst();
+            Optional<Room> room3 = roomRepository.findAll().stream().skip(2).findFirst();
 
             if (user1.isPresent() && user2.isPresent() && room1.isPresent() && room2.isPresent()) {
                 Reservation reservation1 = new Reservation(
@@ -63,8 +64,22 @@ public class ReservationsSeeder implements CommandLineRunner {
                         UUID.randomUUID()
                 );
 
+                Reservation reservation3 = new Reservation(
+                        UUID.randomUUID(),
+                        user2.get(),
+                        room3.get(),
+                        LocalDate.now().plusDays(1),
+                        Time.valueOf("14:00:00"),
+                        Time.valueOf("16:00:00"),
+                        "Team discussion",
+                        "Tom, Jerry, Smithson",
+                        UUID.randomUUID(),
+                        UUID.randomUUID()
+                );
+
                 reservationRepository.save(reservation1);
                 reservationRepository.save(reservation2);
+                reservationRepository.save(reservation3);
             }
         }
     }

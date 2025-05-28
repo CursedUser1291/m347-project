@@ -1,43 +1,57 @@
-import React, { useState } from 'react';
-import { LocationOn, Key, Lock, Visibility, Check, ContentCopy, Close, Edit, AccessTime } from '@mui/icons-material';
+import { LocationOn, Key, Lock, Visibility, Check, ContentCopy, Close, Edit } from '@mui/icons-material';
 import { Card, CardContent, Typography, Input, Box, Chip, Button, Modal, ModalDialog, IconButton, Divider, FormControl, FormLabel, Textarea } from '@mui/joy';
+import {useState} from "react";
 
-export function AppointmentCard() {
+interface AppointmentCard {
+    location: string;
+    title: string;
+    camera: boolean;
+    beamer: boolean;
+    touchscreen: boolean;
+    whiteboard: boolean;
+    comment: string;
+    formattedDate: string;
+    time: string;
+    participants: string;
+    publicKey: string;
+    privateKey: string;
+}
+
+const AppointmentCard = ({
+    location,
+    title,
+    camera,
+    beamer,
+    touchscreen,
+    whiteboard,
+    comment,
+    formattedDate,
+    time,
+    participants,
+    publicKey,
+    privateKey
+}: AppointmentCard) => {
+
     const theme = {
-        card: {
-            background: '#ffffff',
-            text: '#333333',
-            border: '1px solid #e0e0e0',
-        },
-        editCard: {
-            background: '#f5f5f5',
-            text: '#333333',
-        },
-        chip: {
-            background: 'transparent',
-            border: '1px solid #44b9ca',
-            text: '#44b9ca',
-        },
-        input: {
-            background: '#ffffff',
-            text: '#333333',
-        }
+card: {
+    background: undefined,
+    text: undefined,
+    border: undefined,
+},
+editCard: {
+    background: undefined,
+    text: undefined,
+},
+chip: {
+    background: undefined,
+    border: undefined,
+    text: undefined,
+},
+input: {
+    background: undefined,
+    text: undefined,
+}
     };
-
-
-    const location = 'Room 101';
-    const title = 'Team Meeting';
-    const camera = false;
-    const beamer = true;
-    const touchscreen = true;
-    const whiteboard = true;
-    const comment = 'Discuss project updates and next steps.';
-    const formattedDate = '2024-06-10';
-    const time = '14:30';
-    const participants = 'Alice, Bob, Charlie';
-    const publicKey = 'public-key-123';
-    const privateKey = 'private-key-abc';
-
     const [keyModalOpen, setKeyModalOpen] = useState(false);
     const [editModalOpen, setEditModalOpen] = useState(false);
     const [showKey, setShowKey] = useState(false);
@@ -243,10 +257,6 @@ export function AppointmentCard() {
                     bgcolor="rgba(0,0,0,0.05)"
                     mt="auto"
                 >
-                    <Typography level="body-sm">
-                        <AccessTime sx={{ fontSize: 16, mr: 1, verticalAlign: 'text-bottom' }} />
-                        Created: 2023-06-15
-                    </Typography>
                 </Box>
             </Card>
 
