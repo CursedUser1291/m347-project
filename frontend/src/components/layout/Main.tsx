@@ -39,12 +39,14 @@ const Main: React.FC<MainProps> = ({ children }) => {
             maxWidth: '100vw',
             boxSizing: 'border-box',
             overflow: 'hidden',
+            position: 'relative',
+            mt: 0,
           }}
         >
           {/* Header */}
           <Header sidebarOpen={sidebarOpen} />
           {/* Page content */}
-          <Box sx={{ p: 3, flexGrow: 1 }}>
+          <Box sx={{ p: 3, flexGrow: 1, mt: 0 }}>
             {children}
           </Box>
         </Box>
