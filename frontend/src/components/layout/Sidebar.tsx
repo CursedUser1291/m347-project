@@ -8,10 +8,9 @@ import {
 import {
   Typography,
   IconButton,
-  Avatar,
   Box,
   Divider,
-  Input
+  Input, Link
 } from '@mui/joy';
 import {
   FaChevronLeft,
@@ -156,16 +155,43 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onToggle }) => {
           boxSizing: 'border-box',
         }}
       >
-        <Avatar
-          size={open ? "md" : "sm"}
-          src="https://i.pravatar.cc/150?img=3"
-          alt="User Avatar"
-        />
         {open && (
-          <Box>
-            <Typography level="title-sm">Max Mustermann</Typography>
-            <Typography level="body-xs" color="neutral">Administrator</Typography>
-          </Box>
+            localStorage.getItem('loggedIn') === 'true' ? (
+                <Box>
+                  <Typography level="title-sm">Max Mustermann</Typography>
+                  <Typography level="body-xs" color="neutral">Administrator</Typography>
+                </Box>
+            ) : (
+                <Box sx={{display: 'flex', flexDirection: 'column' }}>
+                  <Typography level="title-sm" >Guest</Typography>
+                  <Link
+                      level="title-sm"
+                      href="/login"
+                      sx={{
+                        color: 'primary.main',
+                        textDecoration: 'none',
+                        '&:hover': {
+                          textDecoration: 'underline',
+                        },
+                      }}
+                  >
+                    Log in
+                  </Link>
+                  <Link
+                      level="title-sm"
+                        href="/signup"
+                      sx={{
+                        color: 'primary.main',
+                        textDecoration: 'none',
+                        '&:hover': {
+                          textDecoration: 'underline',
+                        },
+                      }}
+                  >
+                    Sign in
+                  </Link>
+                </Box>
+            )
         )}
       </Box>
     </ProSidebar>

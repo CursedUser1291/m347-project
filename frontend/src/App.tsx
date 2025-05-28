@@ -1,15 +1,21 @@
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Main from './components/layout/Main';
-import {Typography, Box} from '@mui/joy';
-import Dashboard from "./pages/Dashboard.tsx";
+import Dashboard from './pages/Dashboard';
+import Login from './pages/Login';
+import SignUp from './pages/Signup';
 
-function App() {
-  return (
-    <Main>
-      <Typography level="h1" sx={{ mb: 3 }}>Dashboard</Typography>
-      <Box sx={{ display: 'flex', gap: 2 }}>
-        <Dashboard />
-      </Box>
-    </Main>
-  );
-}
+const App = () => {
+    return (
+        <Router>
+            <Main>
+                <Routes>
+                    <Route path="/" element={<Dashboard />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/signup" element={<SignUp />} />
+                </Routes>
+            </Main>
+        </Router>
+    );
+};
+
 export default App;
