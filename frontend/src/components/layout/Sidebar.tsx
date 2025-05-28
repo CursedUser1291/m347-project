@@ -2,7 +2,7 @@ import { Box, IconButton, Input, Link, Typography} from "@mui/joy";
 import {FaChevronLeft, FaChevronRight} from "react-icons/fa";
 import {Sidebar as ProSidebar} from "react-pro-sidebar";
 import { VpnKey } from "@mui/icons-material";
-import { Key } from "@mui/icons-material";
+import { Key, MeetingRoom } from "@mui/icons-material";
 interface SidebarProps {open: boolean; onToggle: () => void;}
 
 const Sidebar = ({ open, onToggle }: SidebarProps) => {
@@ -28,7 +28,10 @@ const Sidebar = ({ open, onToggle }: SidebarProps) => {
           justifyContent: open ? 'space-between' : 'center',
         }}
       >
-        {open && <Typography level="title-lg">RaumManager</Typography>}
+        {open && <Typography level="title-lg">
+            <MeetingRoom />
+            ruumi juhataja
+        </Typography>}
         <IconButton
           onClick={onToggle}
           variant="plain"
