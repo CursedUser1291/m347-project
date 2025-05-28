@@ -15,7 +15,7 @@
             alignItems: 'center',
             justifyContent: 'space-between',
             width: '100%',
-            py: 2,
+            py: 0,
             px: { xs: 2, sm: 3 },
             height: '64px',
             borderBottom: '1px solid',
