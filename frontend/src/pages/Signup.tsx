@@ -15,8 +15,8 @@ const SignUp = () => {
         // Add sign-up logic here
         console.log('Sign Up:', { email, password });
     };
-
     return (
+
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
             <Card sx={{ width: 400 }}>
                 <CardContent>
