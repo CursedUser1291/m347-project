@@ -4,21 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d7b4bfb6-3c70-447e-9790-d36d92a2a72a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/doku/.$Klassendiagramm.drawio.bkp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/doku/Klassendiagramm.drawio" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/pages/Login.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/pages/Signup.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/12246d31-c1b7-4a28-8698-2bed0e69c1c4.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/12246d31-c1b7-4a28-8698-2bed0e69c1c4.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/backend/models/Reservation.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/backend/models/Reservation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/layout/Sidebar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/layout/Sidebar.tsx" afterDir="false" />
-    </list>
+    <list default="true" id="d7b4bfb6-3c70-447e-9790-d36d92a2a72a" name="Changes" comment="Add routing and authentication components for user login and signup" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -132,8 +118,17 @@
       <workItem from="1747312384790" duration="337000" />
       <workItem from="1747313258875" duration="31000" />
       <workItem from="1747826062156" duration="10042000" />
-      <workItem from="1748431049252" duration="404000" />
+      <workItem from="1748431049252" duration="719000" />
     </task>
+    <task id="LOCAL-00001" summary="Add routing and authentication components for user login and signup">
+      <option name="closed" value="true" />
+      <created>1748431740959</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1748431740959</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -141,5 +136,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="Add routing and authentication components for user login and signup" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add routing and authentication components for user login and signup" />
   </component>
 </project>
