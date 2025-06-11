@@ -1,47 +1,65 @@
-import React, { useState } from 'react';
-import { LocationOn, Key, Lock, Visibility, Check, ContentCopy, Close, Edit, AccessTime } from '@mui/icons-material';
+import { LocationOn, Key, Lock, Visibility, Check, ContentCopy, Close, Edit } from '@mui/icons-material';
 import { Card, CardContent, Typography, Input, Box, Chip, Button, Modal, ModalDialog, IconButton, Divider, FormControl, FormLabel, Textarea } from '@mui/joy';
+import {useState} from "react";
 
-export function AppointmentCard() {
+interface AppointmentCard {
+    location: string;
+    title: string;
+    camera: boolean;
+    beamer: boolean;
+    touchscreen: boolean;
+    whiteboard: boolean;
+    comment: string;
+    formattedDate: string;
+    startTime: string;
+    endTime: string;
+    participants: string;
+    publicKey: string;
+    privateKey: string;
+}
+
+const AppointmentCard = ({
+    location,
+    title,
+    camera,
+    beamer,
+    touchscreen,
+    whiteboard,
+    comment,
+    formattedDate,
+    startTime,
+    endTime,
+    participants,
+    publicKey,
+    privateKey
+}: AppointmentCard) => {
+
     const theme = {
-        card: {
-            background: '#ffffff',
-            text: '#333333',
-            border: '1px solid #e0e0e0',
-        },
-        editCard: {
-            background: '#f5f5f5',
-            text: '#333333',
-        },
-        chip: {
-            background: 'transparent',
-            border: '1px solid #44b9ca',
-            text: '#44b9ca',
-        },
-        input: {
-            background: '#ffffff',
-            text: '#333333',
-        }
+card: {
+    background: undefined,
+    text: undefined,
+    border: undefined,
+},
+editCard: {
+    background: undefined,
+    text: undefined,
+},
+chip: {
+    background: undefined,
+    border: undefined,
+    text: undefined,
+},
+input: {
+    background: undefined,
+    text: undefined,
+}
     };
-
-
-    const location = 'Room 101';
-    const title = 'Team Meeting';
-    const camera = false;
-    const beamer = true;
-    const touchscreen = true;
-    const whiteboard = true;
-    const comment = 'Discuss project updates and next steps.';
-    const formattedDate = '2024-06-10';
-    const time = '14:30';
-    const participants = 'Alice, Bob, Charlie';
-    const publicKey = 'public-key-123';
-    const privateKey = 'private-key-abc';
-
     const [keyModalOpen, setKeyModalOpen] = useState(false);
     const [editModalOpen, setEditModalOpen] = useState(false);
     const [showKey, setShowKey] = useState(false);
     const [copied, setCopied] = useState(false);
+    const [error, setError] = useState(String);
+    const [password, setPassword] = useState('');
 
     function formatTimeTo12Hour(timeStr: string) {
         const [hour, minute] = timeStr.split(':').map(Number);
@@ -54,6 +72,50 @@ export function AppointmentCard() {
         navigator.clipboard.writeText(publicKey);
         setCopied(true);
         setTimeout(() => setCopied(false), 1500);
+    }
+
+    const closeKeyModal = () => {
+        setKeyModalOpen(false);
+        setShowKey(false);
+        setError('');
+        setPassword('')
+    }
+
+    const checkPassword = async () => {
+        const username = JSON.parse(localStorage.getItem('user') || '{}').name
+
+        try {
+            const response = await fetch('http://localhost:8080/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    username,
+                    password,
+                }),
+            });
+
+            if (response.ok) {
+                setShowKey(true);
+                setError('');
+            } else {
+                setError('Authentication failed. Please check your password.');
+            }
+        } catch {
+            setError('Authentication failed. Please check your password.');
+        }
+    }
+
+    const editReservation = async () => {
+        try {
+            const response = await fetch(`http://localhost:8080/reservations`, {
+                method: 'PATCH',
+
+            })
+        } catch {
+
+        }
     }
 
     return (
@@ -175,10 +237,19 @@ export function AppointmentCard() {
 
                         <Box>
                             <Typography level="body-sm" sx={{ mb: 1, fontWeight: 'bold' }}>
-                                Time
+                                Starting Time
                             </Typography>
                             <Typography level="body-md">
-                                {formatTimeTo12Hour(time)}
+                                {formatTimeTo12Hour(startTime)}
+                            </Typography>
+                        </Box>
+
+                        <Box>
+                            <Typography level="body-sm" sx={{ mb: 1, fontWeight: 'bold' }}>
+                                Ending Time
+                            </Typography>
+                            <Typography level="body-md">
+                                {formatTimeTo12Hour(endTime)}
                             </Typography>
                         </Box>
                     </Box>
@@ -243,17 +314,13 @@ export function AppointmentCard() {
                     bgcolor="rgba(0,0,0,0.05)"
                     mt="auto"
                 >
-                    <Typography level="body-sm">
-                        <AccessTime sx={{ fontSize: 16, mr: 1, verticalAlign: 'text-bottom' }} />
-                        Created: 2023-06-15
-                    </Typography>
                 </Box>
             </Card>
 
             {/* Modal for Private Key */}
             <Modal 
-                open={keyModalOpen} 
-                onClose={() => { setKeyModalOpen(false); setShowKey(false); }}
+                open={keyModalOpen}
+                onClose={() => { setKeyModalOpen(false); setShowKey(false); setError(''); setPassword('')}}
                 sx={{ 
                     '& .MuiModalDialog-root': { 
                         bgcolor: theme.card.background,
@@ -265,17 +332,19 @@ export function AppointmentCard() {
                 <ModalDialog>
                     <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                         <Typography level="title-md">Private Key Access</Typography>
-                        <IconButton variant="plain" onClick={() => { setKeyModalOpen(false); setShowKey(false); }}>
+                        <IconButton variant="plain" onClick={() => { closeKeyModal(); }}>
                             <Close />
                         </IconButton>
                     </Box>
                     <Typography level="body-sm" mb={2}>
                         For security reasons, please enter your password to reveal the private key.
                     </Typography>
-                    <Input 
-                        type="password" 
-                        placeholder="Enter your password" 
-                        fullWidth 
+                    <Input
+                        type="password"
+                        placeholder="Enter your password"
+                        fullWidth
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                         sx={{ 
                             mb: 2,
                             bgcolor: theme.input.background,
@@ -283,13 +352,18 @@ export function AppointmentCard() {
                             '--Input-focusedHighlight': 'white',
                         }} 
                     />
+                    {error && (
+                        <Typography color="danger" sx={{ mb: 2 }}>
+                            {error}
+                        </Typography>
+                    )}
                     {showKey && (
-                        <Typography sx={{ 
+                        <Typography sx={{
                             fontFamily: 'monospace', 
                             bgcolor: 'rgba(0,0,0,0.05)', 
                             p: 1.5, 
                             borderRadius: '4px', 
-                            mb: 2 
+                            mb: 2
                         }}>
                             {privateKey}
                         </Typography>
@@ -298,12 +372,12 @@ export function AppointmentCard() {
                         <Button 
                             variant="outlined" 
                             color="neutral"
-                            onClick={() => { setKeyModalOpen(false); setShowKey(false); }}
+                            onClick={() => { closeKeyModal(); }}
                         >
                             Cancel
                         </Button>
                         <Button 
-                            onClick={() => setShowKey(true)} 
+                            onClick={() => checkPassword()}
                             variant="solid"
                         >
                             Reveal Key
@@ -336,7 +410,8 @@ export function AppointmentCard() {
                         </IconButton>
                     </Box>
 
-                    <FormControl sx={{ mb: 2 }}>
+                    <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
+                    <FormControl sx={{ flex: 1 }}>
                         <FormLabel>Title</FormLabel>
                         <Input 
                             value={title}
@@ -348,11 +423,24 @@ export function AppointmentCard() {
                         />
                     </FormControl>
 
+                    <FormControl sx={{ flex: 1 }}>
+                        <FormLabel>Date</FormLabel>
+                        <Input
+                            value={formattedDate}
+                            sx={{
+                                bgcolor: theme.input.background,
+                                color: theme.input.text,
+                                '--Input-focusedHighlight': 'white',
+                            }}
+                        />
+                    </FormControl>
+                    </Box>
+
                     <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
                         <FormControl sx={{ flex: 1 }}>
-                            <FormLabel>Date</FormLabel>
+                            <FormLabel>Starting Time</FormLabel>
                             <Input 
-                                value={formattedDate}
+                                value={startTime}
                                 sx={{ 
                                     bgcolor: theme.input.background,
                                     color: theme.input.text,
@@ -360,12 +448,11 @@ export function AppointmentCard() {
                                 }}
                             />
                         </FormControl>
-
                         <FormControl sx={{ flex: 1 }}>
-                            <FormLabel>Time</FormLabel>
-                            <Input 
-                                value={time}
-                                sx={{ 
+                            <FormLabel>Ending Time</FormLabel>
+                            <Input
+                                value={endTime}
+                                sx={{
                                     bgcolor: theme.input.background,
                                     color: theme.input.text,
                                     '--Input-focusedHighlight': 'white',
@@ -385,8 +472,6 @@ export function AppointmentCard() {
                             }}
                         />
                     </FormControl>
-
-
 
                     <FormControl sx={{ mb: 2 }}>
                         <FormLabel>Description</FormLabel>
@@ -413,39 +498,6 @@ export function AppointmentCard() {
                         />
                     </FormControl>
 
-                    <Divider sx={{ my: 2 }} />
-
-                    <Typography level="title-sm" sx={{ mb: 2, textTransform: 'uppercase' }}>
-                        Room Keys
-                    </Typography>
-
-                    <FormControl sx={{ mb: 2 }}>
-                        <FormLabel>Public Key</FormLabel>
-                        <Input 
-                            value={publicKey}
-                            sx={{ 
-                                bgcolor: theme.input.background,
-                                color: theme.input.text,
-                                '--Input-focusedHighlight': 'white',
-                                fontFamily: 'monospace'
-                            }}
-                        />
-                    </FormControl>
-
-                    <FormControl sx={{ mb: 3 }}>
-                        <FormLabel>Private Key</FormLabel>
-                        <Input 
-                            type="password"
-                            value={privateKey}
-                            sx={{ 
-                                bgcolor: theme.input.background,
-                                color: theme.input.text,
-                                '--Input-focusedHighlight': 'white',
-                                fontFamily: 'monospace'
-                            }}
-                        />
-                    </FormControl>
-
                     <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
                         <Button 
                             variant="outlined" 
@@ -454,7 +506,7 @@ export function AppointmentCard() {
                         >
                             Cancel
                         </Button>
-                        <Button variant="solid">Save Changes</Button>
+                        <Button variant="solid" onClick={() => editReservation()}>Save Changes</Button>
                     </Box>
                 </ModalDialog>
             </Modal>

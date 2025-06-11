@@ -1,6 +1,7 @@
     import React from 'react';
     import { Box, IconButton, Typography, Input } from '@mui/joy';
     import { FaSearch, FaBell, FaQuestion } from 'react-icons/fa';
+    import ModeToggle from "../ModeToggle.tsx";
 
     interface HeaderProps {
       sidebarOpen: boolean;
@@ -53,6 +54,7 @@
 
           {/* Action buttons */}
           <Box sx={{ display: 'flex', gap: 1 }}>
+              <ModeToggle />
             <IconButton variant="plain" color="neutral" size="sm">
               <FaBell />
             </IconButton>

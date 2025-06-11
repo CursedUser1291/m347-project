@@ -4,19 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d7b4bfb6-3c70-447e-9790-d36d92a2a72a" name="Changes" comment="Add routing and authentication components for user login and signup">
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/backend/configs/SecurityConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/backend/configs/WebConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/backend/controllers/UserController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/backend/services/UserService.java" afterDir="false" />
+    <list default="true" id="d7b4bfb6-3c70-447e-9790-d36d92a2a72a" name="Changes" comment="Implement reservation fetching and display in Dashboard; refactor AppointmentCard component">
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/ModeToggle.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/utils/IsStartLaterThanEnd.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/12246d31-c1b7-4a28-8698-2bed0e69c1c4.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/12246d31-c1b7-4a28-8698-2bed0e69c1c4.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/backend/repositories/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/backend/repositories/UserRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doku/.$ERD.drawio.dtmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/backend/controllers/ReservationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/backend/controllers/ReservationController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/backend/repositories/ReservationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/backend/repositories/ReservationRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/backend/services/ReservationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/backend/services/ReservationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/AppointmentCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/AppointmentCard.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/components/layout/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/layout/Header.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/components/layout/Sidebar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/layout/Sidebar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Login.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Dashboard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Dashboard.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/pages/Signup.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Signup.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -28,8 +27,9 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Interface" />
-        <option value="TypeScript JSX File" />
         <option value="Class" />
+        <option value="TypeScript JSX File" />
+        <option value="TypeScript File" />
       </list>
     </option>
   </component>
@@ -142,7 +142,15 @@
       <option name="project" value="LOCAL" />
       <updated>1748431740959</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Implement reservation fetching and display in Dashboard; refactor AppointmentCard component">
+      <option name="closed" value="true" />
+      <created>1748447124115</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1748447124115</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -151,6 +159,7 @@
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="Add routing and authentication components for user login and signup" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add routing and authentication components for user login and signup" />
+    <MESSAGE value="Implement reservation fetching and display in Dashboard; refactor AppointmentCard component" />
+    <option name="LAST_COMMIT_MESSAGE" value="Implement reservation fetching and display in Dashboard; refactor AppointmentCard component" />
   </component>
 </project>

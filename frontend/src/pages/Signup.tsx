@@ -37,6 +37,7 @@ const SignUp = () => {
             setError('An error occurred while trying to Sign up. Please try again later.');
         }
     };
+
     return (
 
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
