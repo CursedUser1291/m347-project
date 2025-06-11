@@ -11,7 +11,8 @@ interface AppointmentCard {
     whiteboard: boolean;
     comment: string;
     formattedDate: string;
-    time: string;
+    startTime: string;
+    endTime: string;
     participants: string;
     publicKey: string;
     privateKey: string;
@@ -26,7 +27,8 @@ const AppointmentCard = ({
     whiteboard,
     comment,
     formattedDate,
-    time,
+    startTime,
+    endTime,
     participants,
     publicKey,
     privateKey
@@ -56,6 +58,8 @@ input: {
     const [editModalOpen, setEditModalOpen] = useState(false);
     const [showKey, setShowKey] = useState(false);
     const [copied, setCopied] = useState(false);
+    const [error, setError] = useState(String);
+    const [password, setPassword] = useState('');
 
     function formatTimeTo12Hour(timeStr: string) {
         const [hour, minute] = timeStr.split(':').map(Number);
@@ -68,6 +72,50 @@ input: {
         navigator.clipboard.writeText(publicKey);
         setCopied(true);
         setTimeout(() => setCopied(false), 1500);
+    }
+
+    const closeKeyModal = () => {
+        setKeyModalOpen(false);
+        setShowKey(false);
+        setError('');
+        setPassword('')
+    }
+
+    const checkPassword = async () => {
+        const username = JSON.parse(localStorage.getItem('user') || '{}').name
+
+        try {
+            const response = await fetch('http://localhost:8080/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    username,
+                    password,
+                }),
+            });
+
+            if (response.ok) {
+                setShowKey(true);
+                setError('');
+            } else {
+                setError('Authentication failed. Please check your password.');
+            }
+        } catch {
+            setError('Authentication failed. Please check your password.');
+        }
+    }
+
+    const editReservation = async () => {
+        try {
+            const response = await fetch(`http://localhost:8080/reservations`, {
+                method: 'PATCH',
+
+            })
+        } catch {
+
+        }
     }
 
     return (
@@ -189,10 +237,19 @@ input: {
 
                         <Box>
                             <Typography level="body-sm" sx={{ mb: 1, fontWeight: 'bold' }}>
-                                Time
+                                Starting Time
                             </Typography>
                             <Typography level="body-md">
-                                {formatTimeTo12Hour(time)}
+                                {formatTimeTo12Hour(startTime)}
+                            </Typography>
+                        </Box>
+
+                        <Box>
+                            <Typography level="body-sm" sx={{ mb: 1, fontWeight: 'bold' }}>
+                                Ending Time
+                            </Typography>
+                            <Typography level="body-md">
+                                {formatTimeTo12Hour(endTime)}
                             </Typography>
                         </Box>
                     </Box>
@@ -262,8 +319,8 @@ input: {
 
             {/* Modal for Private Key */}
             <Modal 
-                open={keyModalOpen} 
-                onClose={() => { setKeyModalOpen(false); setShowKey(false); }}
+                open={keyModalOpen}
+                onClose={() => { setKeyModalOpen(false); setShowKey(false); setError(''); setPassword('')}}
                 sx={{ 
                     '& .MuiModalDialog-root': { 
                         bgcolor: theme.card.background,
@@ -275,17 +332,19 @@ input: {
                 <ModalDialog>
                     <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                         <Typography level="title-md">Private Key Access</Typography>
-                        <IconButton variant="plain" onClick={() => { setKeyModalOpen(false); setShowKey(false); }}>
+                        <IconButton variant="plain" onClick={() => { closeKeyModal(); }}>
                             <Close />
                         </IconButton>
                     </Box>
                     <Typography level="body-sm" mb={2}>
                         For security reasons, please enter your password to reveal the private key.
                     </Typography>
-                    <Input 
-                        type="password" 
-                        placeholder="Enter your password" 
-                        fullWidth 
+                    <Input
+                        type="password"
+                        placeholder="Enter your password"
+                        fullWidth
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                         sx={{ 
                             mb: 2,
                             bgcolor: theme.input.background,
@@ -293,13 +352,18 @@ input: {
                             '--Input-focusedHighlight': 'white',
                         }} 
                     />
+                    {error && (
+                        <Typography color="danger" sx={{ mb: 2 }}>
+                            {error}
+                        </Typography>
+                    )}
                     {showKey && (
-                        <Typography sx={{ 
+                        <Typography sx={{
                             fontFamily: 'monospace', 
                             bgcolor: 'rgba(0,0,0,0.05)', 
                             p: 1.5, 
                             borderRadius: '4px', 
-                            mb: 2 
+                            mb: 2
                         }}>
                             {privateKey}
                         </Typography>
@@ -308,12 +372,12 @@ input: {
                         <Button 
                             variant="outlined" 
                             color="neutral"
-                            onClick={() => { setKeyModalOpen(false); setShowKey(false); }}
+                            onClick={() => { closeKeyModal(); }}
                         >
                             Cancel
                         </Button>
                         <Button 
-                            onClick={() => setShowKey(true)} 
+                            onClick={() => checkPassword()}
                             variant="solid"
                         >
                             Reveal Key
@@ -346,7 +410,8 @@ input: {
                         </IconButton>
                     </Box>
 
-                    <FormControl sx={{ mb: 2 }}>
+                    <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
+                    <FormControl sx={{ flex: 1 }}>
                         <FormLabel>Title</FormLabel>
                         <Input 
                             value={title}
@@ -358,11 +423,24 @@ input: {
                         />
                     </FormControl>
 
+                    <FormControl sx={{ flex: 1 }}>
+                        <FormLabel>Date</FormLabel>
+                        <Input
+                            value={formattedDate}
+                            sx={{
+                                bgcolor: theme.input.background,
+                                color: theme.input.text,
+                                '--Input-focusedHighlight': 'white',
+                            }}
+                        />
+                    </FormControl>
+                    </Box>
+
                     <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
                         <FormControl sx={{ flex: 1 }}>
-                            <FormLabel>Date</FormLabel>
+                            <FormLabel>Starting Time</FormLabel>
                             <Input 
-                                value={formattedDate}
+                                value={startTime}
                                 sx={{ 
                                     bgcolor: theme.input.background,
                                     color: theme.input.text,
@@ -370,12 +448,11 @@ input: {
                                 }}
                             />
                         </FormControl>
-
                         <FormControl sx={{ flex: 1 }}>
-                            <FormLabel>Time</FormLabel>
-                            <Input 
-                                value={time}
-                                sx={{ 
+                            <FormLabel>Ending Time</FormLabel>
+                            <Input
+                                value={endTime}
+                                sx={{
                                     bgcolor: theme.input.background,
                                     color: theme.input.text,
                                     '--Input-focusedHighlight': 'white',
@@ -395,8 +472,6 @@ input: {
                             }}
                         />
                     </FormControl>
-
-
 
                     <FormControl sx={{ mb: 2 }}>
                         <FormLabel>Description</FormLabel>
@@ -423,39 +498,6 @@ input: {
                         />
                     </FormControl>
 
-                    <Divider sx={{ my: 2 }} />
-
-                    <Typography level="title-sm" sx={{ mb: 2, textTransform: 'uppercase' }}>
-                        Room Keys
-                    </Typography>
-
-                    <FormControl sx={{ mb: 2 }}>
-                        <FormLabel>Public Key</FormLabel>
-                        <Input 
-                            value={publicKey}
-                            sx={{ 
-                                bgcolor: theme.input.background,
-                                color: theme.input.text,
-                                '--Input-focusedHighlight': 'white',
-                                fontFamily: 'monospace'
-                            }}
-                        />
-                    </FormControl>
-
-                    <FormControl sx={{ mb: 3 }}>
-                        <FormLabel>Private Key</FormLabel>
-                        <Input 
-                            type="password"
-                            value={privateKey}
-                            sx={{ 
-                                bgcolor: theme.input.background,
-                                color: theme.input.text,
-                                '--Input-focusedHighlight': 'white',
-                                fontFamily: 'monospace'
-                            }}
-                        />
-                    </FormControl>
-
                     <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
                         <Button 
                             variant="outlined" 
@@ -464,7 +506,7 @@ input: {
                         >
                             Cancel
                         </Button>
-                        <Button variant="solid">Save Changes</Button>
+                        <Button variant="solid" onClick={() => editReservation()}>Save Changes</Button>
                     </Box>
                 </ModalDialog>
             </Modal>

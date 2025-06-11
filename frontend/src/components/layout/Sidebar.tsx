@@ -1,6 +1,5 @@
 import { Box, IconButton, Input, Link, Typography} from "@mui/joy";
 import {FaChevronLeft, FaChevronRight} from "react-icons/fa";
-import {Sidebar as ProSidebar} from "react-pro-sidebar";
 import { VpnKey } from "@mui/icons-material";
 import { Key, MeetingRoom } from "@mui/icons-material";
 interface SidebarProps {open: boolean; onToggle: () => void;}
@@ -8,13 +7,18 @@ interface SidebarProps {open: boolean; onToggle: () => void;}
 const Sidebar = ({ open, onToggle }: SidebarProps) => {
 
     return (
-        <ProSidebar
-            width={open ? '240px' : '80px'}
-            collapsedWidth="80px"
-            collapsed={!open}
-            transitionDuration={300}
-            backgroundColor="grey.50"
-            style={{ height: '100vh', position: 'fixed', top: 0, left: 0, display: 'flex', flexDirection: 'column' }}
+        <Box
+            sx={{
+                width: open ? '240px' : '80px',
+                height: '100vh',
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                display: 'flex',
+                flexDirection: 'column',
+                backgroundColor: 'grey.50',
+                transition: 'width 0.3s ease',
+            }}
         >
       {/* Logo/Brand */}
       <Box
@@ -28,10 +32,21 @@ const Sidebar = ({ open, onToggle }: SidebarProps) => {
           justifyContent: open ? 'space-between' : 'center',
         }}
       >
-        {open && <Typography level="title-lg">
-            <MeetingRoom />
-            ruumi juhataja
-        </Typography>}
+{open && (
+  <Typography
+    level="title-lg"
+    sx={{
+      display: 'flex',
+      alignItems: 'center',
+      gap: 1,
+      fontWeight: 'bold',
+      color: 'primary.main'
+    }}
+  >
+    <MeetingRoom />
+    Ruumi
+  </Typography>
+)}
         <IconButton
           onClick={onToggle}
           variant="plain"
@@ -132,7 +147,7 @@ const Sidebar = ({ open, onToggle }: SidebarProps) => {
                 )
             )}
         </Box>
-    </ProSidebar>
+    </Box>
   );
 };
 

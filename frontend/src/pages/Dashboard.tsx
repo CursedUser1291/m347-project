@@ -54,19 +54,20 @@ export function Dashboard() {
         }, []);
     return (
         <div>
-            <h1>Dashboard</h1>
+            <h1>All Reservations</h1>
             {reservations.map((reservation, index) => (
                 <AppointmentCard
                     key={index}
-                    location={reservation.room.name}
-                    title={`Room ${reservation.room.roomNumber}`}
+                    location={`Room ${reservation.room.roomNumber}`}
+                    title={reservation.room.name}
                     camera={reservation.room.hasCamera}
                     beamer={reservation.room.hasProjector}
                     touchscreen={reservation.room.hasTouchscreen}
                     whiteboard={reservation.room.hasWhiteboard}
                     comment={reservation.comments}
                     formattedDate={reservation.date}
-                    time={`${reservation.startTime} - ${reservation.endTime}`}
+                    startTime={reservation.startTime}
+                    endTime={reservation.endTime}
                     participants={reservation.participants}
                     publicKey={reservation.publicKey}
                     privateKey={reservation.privateKey}
