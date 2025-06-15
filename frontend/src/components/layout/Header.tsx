@@ -1,7 +1,8 @@
     import React from 'react';
     import { Box, IconButton, Typography, Input } from '@mui/joy';
-    import { FaSearch, FaBell, FaQuestion } from 'react-icons/fa';
+    import { FaSearch, FaBell } from 'react-icons/fa';
     import ModeToggle from "../ModeToggle.tsx";
+    import HelpPopup from "../HelpPopup.tsx";
 
     interface HeaderProps {
       sidebarOpen: boolean;
@@ -58,9 +59,7 @@
             <IconButton variant="plain" color="neutral" size="sm">
               <FaBell />
             </IconButton>
-            <IconButton variant="plain" color="neutral" size="sm">
-              <FaQuestion />
-            </IconButton>
+            <HelpPopup />
           </Box>
         </Box>
       );
