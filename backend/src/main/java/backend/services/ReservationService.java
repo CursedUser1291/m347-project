@@ -20,6 +20,13 @@ public class ReservationService {
         return reservationRepository.findByUser_Id(userID);
     }
 
+    public void deleteReservation(UUID privateKey) {
+        Reservation reservation = reservationRepository.findByPrivateKey(privateKey);
+        if (reservation != null) {
+            reservationRepository.delete(reservation);
+        }
+    }
+
     public Reservation updateReservation(
             UUID privateKey,
             Room room,

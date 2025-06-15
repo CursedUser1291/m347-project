@@ -41,4 +41,10 @@ public class ReservationController {
                 dto.getParticipants()
         );
     }
+
+    @DeleteMapping("/reservations")
+    public void deleteReservation(@RequestParam String privateKey) {
+        UUID uuidPrivateKey = UUID.fromString(privateKey);
+        reservationService.deleteReservation(uuidPrivateKey);
+    }
 }

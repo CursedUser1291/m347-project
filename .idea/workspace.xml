@@ -5,18 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d7b4bfb6-3c70-447e-9790-d36d92a2a72a" name="Changes" comment="Implement reservation fetching and display in Dashboard; refactor AppointmentCard component">
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/backend/controllers/RoomController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/backend/models/ReservationUpdateDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/backend/services/RoomService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/backend/models/AvailableRoomDTO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/backend/controllers/ReservationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/backend/controllers/ReservationController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/backend/repositories/RoomRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/backend/repositories/RoomRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/backend/controllers/RoomController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/backend/controllers/RoomController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/backend/repositories/ReservationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/backend/repositories/ReservationRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/backend/services/ReservationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/backend/services/ReservationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/backend/services/RoomService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/backend/services/RoomService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/components/AppointmentCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/AppointmentCard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/layout/Main.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/layout/Main.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Dashboard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Dashboard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/EditPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/utils/participantsToArray.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,6 +50,10 @@
     &quot;accountId&quot;: &quot;2fed8c75-96e1-4693-8d91-8d92f87bc7ec&quot;
   }
 }</component>
+  <component name="KubernetesApiPersistence"><![CDATA[{}]]></component>
+  <component name="KubernetesApiProvider"><![CDATA[{
+  "isMigrated": true
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 3
