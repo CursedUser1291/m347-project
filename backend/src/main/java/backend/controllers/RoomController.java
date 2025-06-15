@@ -6,11 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import backend.services.RoomService;
 
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 @RestController
@@ -25,7 +24,13 @@ public class RoomController {
 
     @PostMapping("/rooms/available")
     public boolean getAvailableRooms(@RequestBody AvailableRoomDTO availableRoomDTO) {
-        UUID uuidPrivateKey = UUID.fromString(availableRoomDTO.getPrivateKey());
+        UUID uuidPrivateKey;
+        if (availableRoomDTO.getPrivateKey().isEmpty()) {
+            uuidPrivateKey = null;
+        }
+        else {
+            uuidPrivateKey = UUID.fromString(availableRoomDTO.getPrivateKey());
+        }
         LocalDate parsedDate = LocalDate.parse(availableRoomDTO.getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         return roomService.isRoomAvailable(uuidPrivateKey, availableRoomDTO.getRoomName(), parsedDate, availableRoomDTO.getStartTime(), availableRoomDTO.getEndTime());
     }

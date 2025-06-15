@@ -10,6 +10,15 @@ public class ReservationUpdateDTO {
     private Time endTime;
     private String comments;
     private String participants;
+    private String userId;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public String getPrivateKey() {
         return privateKey;

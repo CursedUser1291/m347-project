@@ -30,7 +30,12 @@ public class ReservationController {
     @PatchMapping("/reservations")
     public Reservation updateReservation(@RequestBody ReservationUpdateDTO dto) {
         LocalDate parsedDate = LocalDate.parse(dto.getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        UUID uuidPrivateKey = UUID.fromString(dto.getPrivateKey());
+        UUID uuidPrivateKey = dto.getPrivateKey() == null || dto.getPrivateKey().isEmpty()
+                ? UUID.randomUUID()
+                : UUID.fromString(dto.getPrivateKey());
+
+        UUID uuidUserId = UUID.fromString(dto.getUserId());
+
         return reservationService.updateReservation(
                 uuidPrivateKey,
                 roomService.getRoomByName(dto.getRoomName()),
@@ -38,7 +43,8 @@ public class ReservationController {
                 dto.getStartTime(),
                 dto.getEndTime(),
                 dto.getComments(),
-                dto.getParticipants()
+                dto.getParticipants(),
+                uuidUserId
         );
     }
 

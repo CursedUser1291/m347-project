@@ -34,10 +34,14 @@ public class RoomService {
         if (room == null) {
             throw new IllegalArgumentException("Room with name '" + name + "' does not exist.");
         }
-        Reservation reservationCheck = reservationRepository.findByPrivateKey(uuidPrivateKey);
-        if (reservationCheck.getRoom().getName().equals(name) && reservationCheck.getDate().equals(parsedDate)
-                && !(reservationCheck.getEndTime().before(parsedStartTime) || reservationCheck.getStartTime().after(parsedEndTime))) {
-            return true;
+
+        if (uuidPrivateKey != null) {
+            Reservation reservationCheck = reservationRepository.findByPrivateKey(uuidPrivateKey);
+            if (reservationCheck != null && reservationCheck.getRoom().getName().equals(name)
+                    && reservationCheck.getDate().equals(parsedDate)
+                    && !(reservationCheck.getEndTime().before(parsedStartTime) || reservationCheck.getStartTime().after(parsedEndTime))) {
+                return true;
+            }
         }
 
         List<Reservation> conflictingReservations = reservationRepository.findByRoom_IdAndDate(room.getId(), parsedDate)
@@ -45,7 +49,7 @@ public class RoomService {
                 .filter(reservation ->
                         !(reservation.getEndTime().before(parsedStartTime) || reservation.getStartTime().after(parsedEndTime))
                 )
-                .collect(Collectors.toList());
+                .toList();
 
         return conflictingReservations.isEmpty();
     }

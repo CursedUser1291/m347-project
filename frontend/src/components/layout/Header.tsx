@@ -1,6 +1,5 @@
     import React from 'react';
-    import { Box, IconButton, Typography, Input } from '@mui/joy';
-    import { FaSearch, FaBell } from 'react-icons/fa';
+    import { Box, Typography } from '@mui/joy';
     import ModeToggle from "../ModeToggle.tsx";
     import HelpPopup from "../HelpPopup.tsx";
 
@@ -8,7 +7,7 @@
       sidebarOpen: boolean;
     }
 
-    const Header: React.FC<HeaderProps> = ({ sidebarOpen }) => {
+    const Header: React.FC<HeaderProps> = () => {
       return (
         <Box
           component="header"
@@ -40,25 +39,9 @@
                 Dashboard
             </Typography>
 
-          {/* Search bar */}
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexGrow: 1, mx: 3 }}>
-            <Input
-              size="sm"
-              placeholder="Suchen..."
-              startDecorator={<FaSearch />}
-              sx={{
-                maxWidth: '400px',
-                display: { xs: sidebarOpen ? 'none' : 'flex', sm: 'flex' }
-              }}
-            />
-          </Box>
-
           {/* Action buttons */}
           <Box sx={{ display: 'flex', gap: 1 }}>
               <ModeToggle />
-            <IconButton variant="plain" color="neutral" size="sm">
-              <FaBell />
-            </IconButton>
             <HelpPopup />
           </Box>
         </Box>

@@ -14,7 +14,7 @@ import {
     FormControl,
     FormLabel,
     Textarea,
-    Alert, Snackbar
+    Snackbar
 } from '@mui/joy';
 import {useEffect, useState} from "react";
 import {participantsToArray} from "../utils/participantsToArray.ts";
