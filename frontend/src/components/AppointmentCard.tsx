@@ -1,4 +1,4 @@
-import { LocationOn, Key, Lock, Visibility, Check, ContentCopy, Close, Edit } from '@mui/icons-material';
+import {LocationOn, Key, Lock, Visibility, Check, ContentCopy, Close, Edit, Delete} from '@mui/icons-material';
 import { Card, CardContent, Typography, Input, Box, Chip, Button, Modal, ModalDialog, IconButton, Divider, FormControl, FormLabel, Textarea } from '@mui/joy';
 import {useEffect, useState} from "react";
 import {participantsToArray} from "../utils/participantsToArray.ts";
@@ -59,6 +59,7 @@ input: {
     };
     const [keyModalOpen, setKeyModalOpen] = useState(false);
     const [editModalOpen, setEditModalOpen] = useState(false);
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [showKey, setShowKey] = useState(false);
     const [copied, setCopied] = useState(false);
     const [error, setError] = useState(String);
@@ -82,6 +83,11 @@ input: {
 
     function handleCopy() {
         navigator.clipboard.writeText(publicKey);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1500);
+    }
+    function handleCopyprivate() {
+        navigator.clipboard.writeText(privateKey);
         setCopied(true);
         setTimeout(() => setCopied(false), 1500);
     }
@@ -182,6 +188,19 @@ input: {
         setEditedParticipants(participants);
     }
 
+    const handleDelete  = async () => {
+        try {
+            await fetch(`http://localhost:8080/reservations`, {
+                method: 'DELETE',
+
+            })
+        } catch {
+            console.error('Error Deleting reservation');
+        }
+    };
+
+
+
     return (
         <Box sx={{ p: 2, maxWidth: '800px', mx: 'auto' }}>
             {/* Main container with single card layout */}
@@ -199,8 +218,8 @@ input: {
                 }}
             >
                 <CardContent sx={{ p: 3 }}>
-                    <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2, alignItems: 'center' }}>
-                        <Box sx={{ display: "flex", gap: 1 }}>
+                    <Box sx={{ display: "flex", mb: 2, alignItems: 'center' }}>
+                        <Box sx={{ display: "flex", gap: 1, flexGrow: 1 }}>
                             <Chip 
                                 size="sm" 
                                 variant="outlined" 
@@ -261,15 +280,28 @@ input: {
                                 </Chip>
                             )}
                         </Box>
-                        <Button 
-                            size="sm" 
-                            variant="outlined" 
-                            startDecorator={<Edit />}
-                            onClick={() => setEditModalOpen(true)}
-                            sx={{ color: theme.chip.text }}
-                        >
-                            Edit
-                        </Button>
+                        <Box sx={{display: "flex", gap: 1, marginLeft: 'auto'}}>
+                            <Button
+                                size="sm"
+                                type={"submit"}
+                                variant="outlined"
+                                color="danger"
+                                startDecorator={<Delete />}
+                                onClick={() => setDeleteModalOpen(true)}
+                                sx={{ color: theme.chip.text }}
+                            >
+                                Delete
+                            </Button>
+                            <Button
+                                size="sm"
+                                variant="outlined"
+                                startDecorator={<Edit />}
+                                onClick={() => setEditModalOpen(true)}
+                                sx={{ color: theme.chip.text }}
+                            >
+                                Edit
+                            </Button>
+                        </Box>
                     </Box>
 
                     <Typography level="h4" sx={{ mb: 2, fontWeight: 'bold' }}>
@@ -422,16 +454,29 @@ input: {
                         </Typography>
                     )}
                     {showKey && (
-                        <Typography sx={{
-                            fontFamily: 'monospace', 
-                            bgcolor: 'rgba(0,0,0,0.05)', 
-                            p: 1.5, 
-                            borderRadius: '4px', 
-                            mb: 2
-                        }}>
-                            {privateKey}
-                        </Typography>
+                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                            <Typography sx={{
+                                fontFamily: 'monospace',
+                                bgcolor: 'rgba(0,0,0,0.05)',
+                                p: 1.5,
+                                borderRadius: '4px',
+                                mr: 2
+                            }}>
+                                {privateKey}
+                            </Typography>
+                            <Button
+                                size="sm"
+                                variant="outlined"
+                                onClick={handleCopyprivate}
+                                startDecorator={copied ? <Check /> : <ContentCopy />}
+                                sx={{ color: theme.chip.text }}
+                            >
+                                {copied ? 'Copied' : 'Copy'}
+                            </Button>
+
+                        </Box>
                     )}
+
                     <Box display="flex" justifyContent="flex-end" gap={1}>
                         <Button 
                             variant="outlined" 
@@ -589,6 +634,47 @@ input: {
                     </Box>
                 </ModalDialog>
             </Modal>
+            {/* Modal for Delete Confirmation */}
+            <Modal
+                open={deleteModalOpen}
+                onClose={() => setDeleteModalOpen(false)}
+                sx={{
+                    '& .MuiModalDialog-root': {
+                        bgcolor: theme.card.background,
+                        color: theme.card.text,
+                        border: theme.card.border,
+                    }
+                }}>
+                <ModalDialog>
+                    <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                        <Typography level="title-md">Delete Appointment</Typography>
+                        <IconButton variant="plain" onClick={() => setDeleteModalOpen(false)}>
+                            <Close />
+                        </IconButton>
+                    </Box>
+                    <Typography level="body-sm" mb={2}>
+                        Are you sure you want to delete this appointment?
+                    </Typography>
+                    <Box display="flex" justifyContent="flex-end" gap={1}>
+                        <Button
+                            variant="outlined"
+                            color="neutral"
+                            onClick={() => setDeleteModalOpen(false)}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            variant="solid"
+                            color="danger"
+                            onClick={handleDelete()}
+                        >
+                            Delete
+                        </Button>
+
+                    </Box>
+                </ModalDialog>
+            </Modal>
+
         </Box>
     );
 }
