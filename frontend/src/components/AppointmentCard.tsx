@@ -1,6 +1,7 @@
 import { LocationOn, Key, Lock, Visibility, Check, ContentCopy, Close, Edit } from '@mui/icons-material';
 import { Card, CardContent, Typography, Input, Box, Chip, Button, Modal, ModalDialog, IconButton, Divider, FormControl, FormLabel, Textarea } from '@mui/joy';
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import {participantsToArray} from "../utils/participantsToArray.ts";
 
 interface AppointmentCard {
     location: string;
@@ -16,6 +17,7 @@ interface AppointmentCard {
     participants: string;
     publicKey: string;
     privateKey: string;
+    refreshDashboard: () => void;
 }
 
 const AppointmentCard = ({
@@ -31,7 +33,8 @@ const AppointmentCard = ({
     endTime,
     participants,
     publicKey,
-    privateKey
+    privateKey,
+    refreshDashboard
 }: AppointmentCard) => {
 
     const theme = {
@@ -60,6 +63,15 @@ input: {
     const [copied, setCopied] = useState(false);
     const [error, setError] = useState(String);
     const [password, setPassword] = useState('');
+    const [rooms, setRooms] = useState<{ name: string }[]>([]);
+
+
+    const [editedDate, setEditedDate] = useState(formattedDate);
+    const [editedStartTime, setEditedStartTime] = useState(startTime);
+    const [editedEndTime, setEditedEndTime] = useState(endTime);
+    const [editedLocation, setEditedLocation] = useState(location);
+    const [editedComment, setEditedComment] = useState(comment);
+    const [editedParticipants, setEditedParticipants] = useState(participants);
 
     function formatTimeTo12Hour(timeStr: string) {
         const [hour, minute] = timeStr.split(':').map(Number);
@@ -107,15 +119,67 @@ input: {
         }
     }
 
+    const getAllRooms = async () => {
+        try {
+            const response = await fetch('http://localhost:8080/rooms',
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+            if (response.ok) {
+                const data = (await response.json()).sort((a, b) => b.name.localeCompare(a.name));
+                setRooms(data);
+            } else {
+                console.error('Failed to fetch rooms:', response.statusText);
+            }
+        }
+        catch (error) {
+            console.error('An error occurred while fetching rooms:', error);
+        }
+    }
+
     const editReservation = async () => {
         try {
             const response = await fetch(`http://localhost:8080/reservations`, {
                 method: 'PATCH',
-
-            })
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    privateKey: privateKey,
+                    roomName: editedLocation,
+                    date: editedDate,
+                    startTime: editedStartTime,
+                    endTime: editedEndTime,
+                    comments: editedComment,
+                    participants: participantsToArray(editedParticipants),
+                }),
+            });
+            if (response.ok) {
+                setEditModalOpen(false);
+                refreshDashboard();
+            }
         } catch {
-
+            setError('An error occurred while trying to edit the reservation. Please try again.');
         }
+    }
+
+    useEffect(() => {
+        if (editModalOpen) {
+            getAllRooms();
+        }
+    }, [editModalOpen]);
+
+    const closeModal = () => {
+        setEditModalOpen(false)
+        setEditedDate(formattedDate);
+        setEditedStartTime(startTime);
+        setEditedEndTime(endTime);
+        setEditedLocation(location);
+        setEditedComment(comment);
+        setEditedParticipants(participants);
     }
 
     return (
@@ -411,22 +475,23 @@ input: {
                     </Box>
 
                     <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
-                    <FormControl sx={{ flex: 1 }}>
-                        <FormLabel>Title</FormLabel>
-                        <Input 
-                            value={title}
-                            sx={{ 
-                                bgcolor: theme.input.background,
-                                color: theme.input.text,
-                                '--Input-focusedHighlight': 'white',
-                            }}
-                        />
-                    </FormControl>
-
+                        <FormControl sx={{ flex: 1 }}>
+                            <FormLabel>Title</FormLabel>
+                            <Input
+                                value={editedLocation}
+                                readOnly
+                                sx={{
+                                    bgcolor: theme.input.background,
+                                    color: theme.input.text,
+                                    '--Input-focusedHighlight': 'white',
+                                }}
+                            />
+                        </FormControl>
                     <FormControl sx={{ flex: 1 }}>
                         <FormLabel>Date</FormLabel>
                         <Input
-                            value={formattedDate}
+                            value={editedDate}
+                            onChange={(e) => setEditedDate(e.target.value)}
                             sx={{
                                 bgcolor: theme.input.background,
                                 color: theme.input.text,
@@ -440,7 +505,8 @@ input: {
                         <FormControl sx={{ flex: 1 }}>
                             <FormLabel>Starting Time</FormLabel>
                             <Input 
-                                value={startTime}
+                                value={editedStartTime}
+                                onChange={(e) => setEditedStartTime(e.target.value)}
                                 sx={{ 
                                     bgcolor: theme.input.background,
                                     color: theme.input.text,
@@ -451,7 +517,8 @@ input: {
                         <FormControl sx={{ flex: 1 }}>
                             <FormLabel>Ending Time</FormLabel>
                             <Input
-                                value={endTime}
+                                value={editedEndTime}
+                                onChange={(e) => setEditedEndTime(e.target.value)}
                                 sx={{
                                     bgcolor: theme.input.background,
                                     color: theme.input.text,
@@ -463,21 +530,32 @@ input: {
 
                     <FormControl sx={{ mb: 2 }}>
                         <FormLabel>Location</FormLabel>
-                        <Input 
-                            value={location}
-                            sx={{ 
-                                bgcolor: theme.input.background,
+                        <select
+                            value={editedLocation}
+                            onChange={(e) => setEditedLocation(e.target.value)}
+                            style={{
+                                backgroundColor: theme.input.background,
                                 color: theme.input.text,
-                                '--Input-focusedHighlight': 'white',
+                                border: '1px solid #ccc',
+                                borderRadius: '4px',
+                                padding: '8px',
+                                width: '100%',
                             }}
-                        />
+                        >
+                            {rooms.map((room) => (
+                                <option key={room.name} value={room.name}>
+                                    {room.name}
+                                </option>
+                            ))}
+                        </select>
                     </FormControl>
 
                     <FormControl sx={{ mb: 2 }}>
                         <FormLabel>Description</FormLabel>
                         <Textarea 
                             minRows={3}
-                            value={comment}
+                            value={editedComment}
+                            onChange={(e) => setEditedComment(e.target.value)}
                             sx={{ 
                                 bgcolor: theme.input.background,
                                 color: theme.input.text,
@@ -489,7 +567,8 @@ input: {
                     <FormControl sx={{ mb: 2 }}>
                         <FormLabel>Participants</FormLabel>
                         <Input 
-                            value={participants}
+                            value={editedParticipants}
+                            onChange={(e) => setEditedParticipants(e.target.value)}
                             sx={{ 
                                 bgcolor: theme.input.background,
                                 color: theme.input.text,
@@ -502,7 +581,7 @@ input: {
                         <Button 
                             variant="outlined" 
                             color="neutral" 
-                            onClick={() => setEditModalOpen(false)}
+                            onClick={() => closeModal()}
                         >
                             Cancel
                         </Button>

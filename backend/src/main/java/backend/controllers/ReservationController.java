@@ -1,17 +1,17 @@
 package backend.controllers;
 
 import backend.models.Reservation;
+import backend.models.ReservationUpdateDTO;
 import backend.models.Room;
 import backend.models.User;
+import backend.services.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import backend.services.ReservationService;
 
 import java.sql.Time;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,6 +19,8 @@ import java.util.UUID;
 public class ReservationController {
     @Autowired
     private ReservationService reservationService;
+    @Autowired
+    private RoomService roomService;
 
     @GetMapping("/reservations")
     public List<Reservation> login(@RequestParam UUID userID) {
@@ -26,16 +28,17 @@ public class ReservationController {
     }
 
     @PatchMapping("/reservations")
-    public Reservation updateReservation(
-            @RequestParam UUID privateKey,
-            @RequestParam UUID reservationID,
-            @RequestParam Room room,
-            @RequestParam LocalDate date,
-            @RequestParam Time startTime,
-            @RequestParam Time endTime,
-            @RequestParam String comments,
-            @RequestParam String participants
-    ) {
-        return reservationService.updateReservation(privateKey, reservationID, room, date, startTime, endTime, comments, participants);
+    public Reservation updateReservation(@RequestBody ReservationUpdateDTO dto) {
+        LocalDate parsedDate = LocalDate.parse(dto.getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        UUID uuidPrivateKey = UUID.fromString(dto.getPrivateKey());
+        return reservationService.updateReservation(
+                uuidPrivateKey,
+                roomService.getRoomByName(dto.getRoomName()),
+                parsedDate,
+                dto.getStartTime(),
+                dto.getEndTime(),
+                dto.getComments(),
+                dto.getParticipants()
+        );
     }
 }

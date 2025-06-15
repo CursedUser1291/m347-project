@@ -5,18 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d7b4bfb6-3c70-447e-9790-d36d92a2a72a" name="Changes" comment="Implement reservation fetching and display in Dashboard; refactor AppointmentCard component">
-      <change afterPath="$PROJECT_DIR$/frontend/src/components/ModeToggle.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/utils/IsStartLaterThanEnd.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/12246d31-c1b7-4a28-8698-2bed0e69c1c4.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/12246d31-c1b7-4a28-8698-2bed0e69c1c4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/backend/controllers/RoomController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/backend/models/ReservationUpdateDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/backend/services/RoomService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/backend/controllers/ReservationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/backend/controllers/ReservationController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/backend/repositories/ReservationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/backend/repositories/ReservationRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/backend/repositories/RoomRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/backend/repositories/RoomRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/backend/services/ReservationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/backend/services/ReservationService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/components/AppointmentCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/AppointmentCard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/layout/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/layout/Header.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/layout/Sidebar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/layout/Sidebar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/layout/Main.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/layout/Main.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/pages/Dashboard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Dashboard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Signup.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Signup.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/EditPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/utils/participantsToArray.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,9 +27,9 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Interface" />
-        <option value="Class" />
         <option value="TypeScript JSX File" />
         <option value="TypeScript File" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -133,6 +133,8 @@
       <workItem from="1747313258875" duration="31000" />
       <workItem from="1747826062156" duration="10042000" />
       <workItem from="1748431049252" duration="719000" />
+      <workItem from="1749645337195" duration="8021000" />
+      <workItem from="1749990210825" duration="3181000" />
     </task>
     <task id="LOCAL-00001" summary="Add routing and authentication components for user login and signup">
       <option name="closed" value="true" />

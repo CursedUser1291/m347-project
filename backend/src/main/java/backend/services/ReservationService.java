@@ -22,7 +22,6 @@ public class ReservationService {
 
     public Reservation updateReservation(
             UUID privateKey,
-            UUID reservationID,
             Room room,
             LocalDate date,
             Time startTime,
