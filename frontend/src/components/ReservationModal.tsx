@@ -43,7 +43,8 @@ const ReservationModal: React.FC<ReservationModalProps> = ({
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [rooms, setRooms] = useState<{ name: string }[]>([]);
     const [error, setError] = useState<string | null>(null);
-
+    const [timeSnackbarError, setTimeSnackbarError] = useState(false);
+    const [timeErrorMsg, setTimeErrorMsg] = useState('');
 
     const isValidTimeFormat = (value: string) => {
         const regex = /^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/;
@@ -51,21 +52,34 @@ const ReservationModal: React.FC<ReservationModalProps> = ({
     };
 
     const checkRoomAvailable = async () => {
-        console.log(editedLocation)
+        if (editedStartTime === '' || editedEndTime === '') {
+            setTimeErrorMsg('Start time and end time are required to check room availability.');
+            setTimeSnackbarError(true);
+            setTimeout(() => setTimeSnackbarError(false), 3000);
+            return;
+        }
+        if (editedStartTime > editedEndTime) {
+            setTimeErrorMsg('Start time cannot be later than end time.');
+            setTimeSnackbarError(true);
+            setTimeout(() => setTimeSnackbarError(false), 3000);
+            return;
+        }
         if (!editedLocation) {
             console.error('Location is required to check room availability.');
             setSnackbarOpen(true);
             return;
         }
         try {
+            setLoading(true);
             await new Promise(resolve => setTimeout(resolve, 500));
+            setLoading(false);
             const response = await fetch('http://localhost:8080/rooms/available', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    privateKey: "",
+                    privateKey: privateKey,
                     roomName: editedLocation,
                     date: editedDate,
                     startTime: editedStartTime,
@@ -212,6 +226,9 @@ const ReservationModal: React.FC<ReservationModalProps> = ({
                             width: '100%',
                         }}
                     >
+                        <option value="" disabled>
+                            Select a location
+                        </option>
                         {rooms.map((room) => (
                             <option key={room.name} value={room.name}>
                                 {room.name}
@@ -244,7 +261,7 @@ const ReservationModal: React.FC<ReservationModalProps> = ({
                     <Button
                         variant="solid"
                         onClick={checkRoomAvailable}
-                        disabled={roomIsAvailable}
+                        disabled={roomIsAvailable || !editedLocation}
                         loading={loading}
                     >
                         Check room availability
@@ -257,6 +274,15 @@ const ReservationModal: React.FC<ReservationModalProps> = ({
                         startDecorator={roomIsAvailable ? <CheckCircle /> : <Error />}
                     >
                         {roomIsAvailable ? 'Room is available!' : 'Room is not available.'}
+                    </Snackbar>
+                    <Snackbar
+                        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                        open={timeSnackbarError}
+                        color={'danger'}
+                        variant="solid"
+                        startDecorator={<Error />}
+                    >
+                        {timeErrorMsg}
                     </Snackbar>
                     <Button variant="solid" onClick={handleSave} disabled={!roomIsAvailable}>
                         Save

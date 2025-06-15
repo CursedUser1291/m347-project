@@ -37,6 +37,7 @@ public class RoomService {
 
         if (uuidPrivateKey != null) {
             Reservation reservationCheck = reservationRepository.findByPrivateKey(uuidPrivateKey);
+            System.out.println(reservationCheck.getPrivateKey());
             if (reservationCheck != null && reservationCheck.getRoom().getName().equals(name)
                     && reservationCheck.getDate().equals(parsedDate)
                     && !(reservationCheck.getEndTime().before(parsedStartTime) || reservationCheck.getStartTime().after(parsedEndTime))) {

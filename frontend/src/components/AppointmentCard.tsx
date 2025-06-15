@@ -1,4 +1,4 @@
-import {LocationOn, Key, Lock, Visibility, Check, ContentCopy, Close, Edit, Delete, CheckCircle, Error} from '@mui/icons-material';
+import {LocationOn, Key, Lock, Visibility, Check, ContentCopy, Close, Edit, Delete } from '@mui/icons-material';
 import {
     Card,
     CardContent,
@@ -11,13 +11,9 @@ import {
     ModalDialog,
     IconButton,
     Divider,
-    FormControl,
-    FormLabel,
-    Textarea,
-    Snackbar
 } from '@mui/joy';
-import {useEffect, useState} from "react";
-import {participantsToArray} from "../utils/participantsToArray.ts";
+import {useState} from "react";
+import ReservationModal from "./ReservationModal.tsx";
 
 interface AppointmentCard {
     location: string;
@@ -80,17 +76,6 @@ input: {
     const [copied, setCopied] = useState(false);
     const [error, setError] = useState(String);
     const [password, setPassword] = useState('');
-    const [rooms, setRooms] = useState<{ name: string }[]>([]);
-    const [roomIsAvailable, setRoomIsAvailable] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-
-    const [editedDate, setEditedDate] = useState(formattedDate);
-    const [editedStartTime, setEditedStartTime] = useState(startTime);
-    const [editedEndTime, setEditedEndTime] = useState(endTime);
-    const [editedLocation, setEditedLocation] = useState(location);
-    const [editedComment, setEditedComment] = useState(comment);
-    const [editedParticipants, setEditedParticipants] = useState(participants);
 
     function formatTimeTo12Hour(timeStr: string) {
         const [hour, minute] = timeStr.split(':').map(Number);
@@ -117,35 +102,6 @@ input: {
         setPassword('')
     }
 
-    const checkRoomAvailable = async () => {
-        try {
-            await new Promise(resolve => setTimeout(resolve, 500));
-            const response = await fetch('http://localhost:8080/rooms/available', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    privateKey: privateKey,
-                    roomName: editedLocation,
-                    date: editedDate,
-                    startTime: editedStartTime,
-                    endTime: editedEndTime,
-                }),
-            });
-            if (response.ok) {
-                const data = await response.json();
-                setRoomIsAvailable(data);
-                setSnackbarOpen(true);
-                setLoading(false);
-                setTimeout(() => setSnackbarOpen(false), 2000);
-            } else {
-                console.error('Failed to fetch rooms:', response.statusText);
-            }
-        } catch (error) {
-            console.error('An error occurred while fetching rooms:', error);
-        }
-    }
 
     const checkPassword = async () => {
         const username = JSON.parse(localStorage.getItem('user') || '{}').name
@@ -171,69 +127,8 @@ input: {
             setError('Authentication failed. Please check your password.');
         }
     }
-
-    const getAllRooms = async () => {
-        try {
-            const response = await fetch('http://localhost:8080/rooms',
-                {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
-            if (response.ok) {
-                const data = (await response.json()).sort((a, b) => b.name.localeCompare(a.name));
-                setRooms(data);
-            } else {
-                console.error('Failed to fetch rooms:', response.statusText);
-            }
-        }
-        catch (error) {
-            console.error('An error occurred while fetching rooms:', error);
-        }
-    }
-
-    const editReservation = async () => {
-        try {
-            const response = await fetch(`http://localhost:8080/reservations`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    privateKey: privateKey,
-                    roomName: editedLocation,
-                    date: editedDate,
-                    startTime: editedStartTime,
-                    endTime: editedEndTime,
-                    comments: editedComment,
-                    participants: participantsToArray(editedParticipants),
-                }),
-            });
-            if (response.ok) {
-                setEditModalOpen(false);
-                refreshDashboard();
-            }
-        } catch {
-            setError('An error occurred while trying to edit the reservation. Please try again.');
-        }
-    }
-
-    useEffect(() => {
-        if (editModalOpen) {
-            getAllRooms();
-        }
-    }, [editModalOpen]);
-
     const closeModal = () => {
         setEditModalOpen(false)
-        setEditedDate(formattedDate);
-        setEditedStartTime(startTime);
-        setEditedEndTime(endTime);
-        setEditedLocation(location);
-        setEditedComment(comment);
-        setEditedParticipants(participants);
-        setRoomIsAvailable(false)
     }
 
     const handleDelete = async () => {
@@ -550,167 +445,21 @@ input: {
             </Modal>
 
             {/* Modal for Edit Appointment */}
-            <Modal 
+            <ReservationModal
                 open={editModalOpen}
-                onClose={() => { setEditModalOpen(false); setRoomIsAvailable(false); }}
-                sx={{ 
-                    '& .MuiModalDialog-root': { 
-                        bgcolor: theme.editCard.background,
-                        color: theme.editCard.text,
-                        border: theme.card.border,
-                        maxWidth: '600px',
-                        width: '100%',
-                    }
+                privateKey={privateKey}
+                onClose={closeModal}
+                initialData={{
+                    date: formattedDate,
+                    startTime,
+                    endTime,
+                    location,
+                    comment,
+                    participants,
                 }}
-            >
-                <ModalDialog>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-                        <Typography level="h4">
-                            Edit Appointment
-                        </Typography>
-                        <IconButton variant="plain" onClick={() => setEditModalOpen(false)}>
-                            <Close />
-                        </IconButton>
-                    </Box>
-
-                    <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
-                        <FormControl sx={{ flex: 1 }}>
-                            <FormLabel>Title</FormLabel>
-                            <Input
-                                value={editedLocation}
-                                readOnly
-                                sx={{
-                                    bgcolor: theme.input.background,
-                                    color: theme.input.text,
-                                    '--Input-focusedHighlight': 'white',
-                                }}
-                            />
-                        </FormControl>
-                    <FormControl sx={{ flex: 1 }}>
-                        <FormLabel>Date</FormLabel>
-                        <Input
-                            value={editedDate}
-                            onChange={(e) => { setEditedDate(e.target.value); setRoomIsAvailable(false); }}
-                            sx={{
-                                bgcolor: theme.input.background,
-                                color: theme.input.text,
-                                '--Input-focusedHighlight': 'white',
-                            }}
-                        />
-                    </FormControl>
-                    </Box>
-
-                    <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
-                        <FormControl sx={{ flex: 1 }}>
-                            <FormLabel>Starting Time</FormLabel>
-                            <Input 
-                                value={editedStartTime}
-                                onChange={(e) => { setEditedStartTime(e.target.value); setRoomIsAvailable(false); }}
-                                sx={{ 
-                                    bgcolor: theme.input.background,
-                                    color: theme.input.text,
-                                    '--Input-focusedHighlight': 'white',
-                                }}
-                            />
-                        </FormControl>
-                        <FormControl sx={{ flex: 1 }}>
-                            <FormLabel>Ending Time</FormLabel>
-                            <Input
-                                value={editedEndTime}
-                                onChange={(e) => { setEditedEndTime(e.target.value); setRoomIsAvailable(false); }}
-                                sx={{
-                                    bgcolor: theme.input.background,
-                                    color: theme.input.text,
-                                    '--Input-focusedHighlight': 'white',
-                                }}
-                            />
-                        </FormControl>
-                    </Box>
-
-                    <FormControl sx={{ mb: 2 }}>
-                        <FormLabel>Location</FormLabel>
-                        <select
-                            value={editedLocation}
-                            onChange={(e) => { setEditedLocation(e.target.value); setRoomIsAvailable(false) } }
-                            style={{
-                                backgroundColor: theme.input.background,
-                                color: theme.input.text,
-                                border: '1px solid #ccc',
-                                borderRadius: '4px',
-                                padding: '8px',
-                                width: '100%',
-                            }}
-                        >
-                            {rooms.map((room) => (
-                                <option key={room.name} value={room.name}>
-                                    {room.name}
-                                </option>
-                            ))}
-                        </select>
-                    </FormControl>
-
-                    <FormControl sx={{ mb: 2 }}>
-                        <FormLabel>Description</FormLabel>
-                        <Textarea
-                            minRows={3}
-                            value={editedComment}
-                            onChange={(e) => {setEditedComment(e.target.value); setRoomIsAvailable(false); }}
-                            sx={{
-                                bgcolor: theme.input.background,
-                                color: theme.input.text,
-                                '--Textarea-focusedHighlight': 'white',
-                            }}
-                        />
-                    </FormControl>
-
-                    <FormControl sx={{ mb: 2 }}>
-                        <FormLabel>Participants</FormLabel>
-                        <Input 
-                            value={editedParticipants}
-                            onChange={(e) => {setEditedParticipants(e.target.value); setRoomIsAvailable(false); }}
-                            sx={{ 
-                                bgcolor: theme.input.background,
-                                color: theme.input.text,
-                                '--Input-focusedHighlight': 'white',
-                            }}
-                        />
-                    </FormControl>
-
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-                        <Button 
-                            variant="outlined" 
-                            color="neutral" 
-                            onClick={() => closeModal()}
-                        >
-                            Cancel
-                        </Button>
-                        <Button
-                            variant="solid"
-                            onClick={() => {
-                                setLoading(true);
-                                checkRoomAvailable()
-                                    .finally(() => setLoading(false));
-                            }}
-                            disabled={roomIsAvailable === true}
-                            loading={loading}
-                        >
-                            Check room availability
-                        </Button>
-                        <Box sx={{ position: 'fixed', bottom: 16, right: 16, zIndex: 9999 }}>
-                            <Snackbar
-                                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-                                open={snackbarOpen}
-                                color={roomIsAvailable ? "success" : "danger"}
-                                variant="solid"
-                                startDecorator={roomIsAvailable ? <CheckCircle /> : <Error />}
-                            >
-                                {roomIsAvailable ? "Room is available!" : "Room is not available."}
-                            </Snackbar>
-                        </Box>
-                        <Button variant="solid" onClick={() => editReservation()} disabled={!roomIsAvailable}>Save Changes</Button>
-                    </Box>
-                </ModalDialog>
-            </Modal>
+                isEditMode={true}
+                refreshDashboard={refreshDashboard}
+            />
 
             {/* Modal for Delete Confirmation */}
             <Modal

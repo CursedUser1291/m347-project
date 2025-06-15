@@ -27,8 +27,7 @@ public class RoomController {
         UUID uuidPrivateKey;
         if (availableRoomDTO.getPrivateKey().isEmpty()) {
             uuidPrivateKey = null;
-        }
-        else {
+        } else {
             uuidPrivateKey = UUID.fromString(availableRoomDTO.getPrivateKey());
         }
         LocalDate parsedDate = LocalDate.parse(availableRoomDTO.getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
