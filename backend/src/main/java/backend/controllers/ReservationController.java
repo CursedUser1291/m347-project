@@ -50,7 +50,8 @@ public class ReservationController {
 
     @DeleteMapping("/reservations")
     public void deleteReservation(@RequestParam String privateKey) {
-        UUID uuidPrivateKey = UUID.fromString(privateKey);
-        reservationService.deleteReservation(uuidPrivateKey);
+            UUID uuidPrivateKey = UUID.fromString(privateKey);
+            reservationService.deleteReservation(uuidPrivateKey);
+
     }
 }

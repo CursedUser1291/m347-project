@@ -14,6 +14,7 @@ import {
 } from '@mui/joy';
 import {useState} from "react";
 import ReservationModal from "./ReservationModal.tsx";
+import toast, { Toaster } from 'react-hot-toast';
 
 interface AppointmentCard {
     location: string;
@@ -141,12 +142,13 @@ input: {
             });
             if (response.ok) {
                 setDeleteModalOpen(false);
+                toast.success("Reservation deleted successfully.", { duration: 3000 });
                 refreshDashboard();
             } else {
-                console.error('Failed to delete reservation');
+                toast.error("Failed to delete reservation. Please try again.");
             }
         } catch (error) {
-            console.error('Error deleting reservation:', error);
+            toast.error("An error occurred while deleting the reservation. Please try again.");
         }
     };
 
