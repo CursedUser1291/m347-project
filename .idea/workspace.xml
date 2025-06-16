@@ -5,12 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d7b4bfb6-3c70-447e-9790-d36d92a2a72a" name="Changes" comment="Implement reservation fetching and display in Dashboard; refactor AppointmentCard component">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/12246d31-c1b7-4a28-8698-2bed0e69c1c4.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/12246d31-c1b7-4a28-8698-2bed0e69c1c4.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/AppointmentCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/AppointmentCard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/layout/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/layout/Header.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,10 +42,10 @@
     &quot;accountId&quot;: &quot;b4f2e4c8-bf22-4c6a-8fa8-931ba45b46f1&quot;
   }
 }</component>
-  <component name="KubernetesApiPersistence"><![CDATA[{}]]></component>
-  <component name="KubernetesApiProvider"><![CDATA[{
-  "isMigrated": true
-}]]></component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 3
@@ -132,6 +127,8 @@
       <workItem from="1749668547588" duration="403000" />
       <workItem from="1749705225070" duration="1355000" />
       <workItem from="1749728996311" duration="20000" />
+      <workItem from="1749994232633" duration="124000" />
+      <workItem from="1750052590952" duration="234000" />
     </task>
     <task id="LOCAL-00001" summary="Add routing and authentication components for user login and signup">
       <option name="closed" value="true" />
