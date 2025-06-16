@@ -23,6 +23,7 @@ const Login = () => {
             if (response.ok) {
                 const data = await response.json();
                 localStorage.setItem('user', JSON.stringify(data));
+                localStorage.removeItem('publicKeys')
                 window.location.href = '/';
             } else {
                 setError('Login failed. Please check your username and password.');

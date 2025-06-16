@@ -1,6 +1,19 @@
-import {LocationOn, Key, Lock, Visibility, Check, ContentCopy, Close, Edit, Delete} from '@mui/icons-material';
-import { Card, CardContent, Typography, Input, Box, Chip, Button, Modal, ModalDialog, IconButton, Divider, FormControl, FormLabel, Textarea } from '@mui/joy';
+import {LocationOn, Key, Lock, Visibility, Check, ContentCopy, Close, Edit, Delete } from '@mui/icons-material';
+import {
+    Card,
+    CardContent,
+    Typography,
+    Input,
+    Box,
+    Chip,
+    Button,
+    Modal,
+    ModalDialog,
+    IconButton,
+    Divider,
+} from '@mui/joy';
 import {useState} from "react";
+import ReservationModal from "./ReservationModal.tsx";
 
 interface AppointmentCard {
     location: string;
@@ -16,6 +29,9 @@ interface AppointmentCard {
     participants: string;
     publicKey: string;
     privateKey: string;
+    refreshDashboard: () => void;
+    refreshAppointment?: () => void;
+    mode?: "public" | "private";
 }
 
 const AppointmentCard = ({
@@ -31,7 +47,10 @@ const AppointmentCard = ({
     endTime,
     participants,
     publicKey,
-    privateKey
+    privateKey,
+    refreshDashboard,
+    refreshAppointment,
+    mode = "private"
 }: AppointmentCard) => {
 
     const theme = {
@@ -89,7 +108,6 @@ input: {
 
     const checkPassword = async () => {
         const username = JSON.parse(localStorage.getItem('user') || '{}').name
-
         try {
             const response = await fetch('http://localhost:8080/login', {
                 method: 'POST',
@@ -112,30 +130,28 @@ input: {
             setError('Authentication failed. Please check your password.');
         }
     }
-
-    const editReservation = async () => {
-        try {
-            await fetch(`http://localhost:8080/reservations`, {
-                method: 'PATCH',
-
-            })
-        } catch {
-                console.error('Error updating reservation');
-        }
+    const closeModal = () => {
+        setEditModalOpen(false)
     }
 
-    const handleDelete  = async () => {
+    const handleDelete = async () => {
         try {
-            await fetch(`http://localhost:8080/reservations`, {
+            const response = await fetch(`http://localhost:8080/reservations?privateKey=${privateKey}`, {
                 method: 'DELETE',
-
-            })
-        } catch {
-            console.error('Error Deleting reservation');
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (response.ok) {
+                setDeleteModalOpen(false);
+                refreshDashboard();
+            } else {
+                console.error('Failed to delete reservation');
+            }
+        } catch (error) {
+            console.error('Error deleting reservation:', error);
         }
     };
-
-
 
     return (
         <Box sx={{ p: 2, maxWidth: '800px', mx: 'auto' }}>
@@ -216,10 +232,11 @@ input: {
                                 </Chip>
                             )}
                         </Box>
-                        <Box sx={{display: "flex", gap: 1, marginLeft: 'auto'}}>
+                        {mode === "private" && (
+                        <Box sx={{ display: "flex", gap: 1, marginLeft: 'auto' }}>
                             <Button
                                 size="sm"
-                                type={"submit"}
+                                type="submit"
                                 variant="outlined"
                                 color="danger"
                                 startDecorator={<Delete />}
@@ -238,8 +255,8 @@ input: {
                                 Edit
                             </Button>
                         </Box>
+                    )}
                     </Box>
-
                     <Typography level="h4" sx={{ mb: 2, fontWeight: 'bold' }}>
                         {title}
                     </Typography>
@@ -320,6 +337,7 @@ input: {
                                     <Lock fontSize="small" sx={{ mr: 1, verticalAlign: 'middle' }} /> 
                                     Private Key
                                 </Typography>
+                                {mode === "private" && (
                                 <Button 
                                     size="sm" 
                                     variant="outlined" 
@@ -329,6 +347,7 @@ input: {
                                 >
                                     Reveal
                                 </Button>
+                                )}
                             </Box>
                             <Typography sx={{ fontFamily: 'monospace', p: 1, bgcolor: 'rgba(0,0,0,0.05)', borderRadius: '4px' }}>
                                 ••••••••••••••••••••••••••••
@@ -432,129 +451,23 @@ input: {
             </Modal>
 
             {/* Modal for Edit Appointment */}
-            <Modal 
-                open={editModalOpen} 
-                onClose={() => setEditModalOpen(false)}
-                sx={{ 
-                    '& .MuiModalDialog-root': { 
-                        bgcolor: theme.editCard.background,
-                        color: theme.editCard.text,
-                        border: theme.card.border,
-                        maxWidth: '600px',
-                        width: '100%',
-                    }
+            <ReservationModal
+                open={editModalOpen}
+                privateKey={privateKey}
+                onClose={closeModal}
+                initialData={{
+                    date: formattedDate,
+                    startTime,
+                    endTime,
+                    location,
+                    comment,
+                    participants,
                 }}
-            >
-                <ModalDialog>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-                        <Typography level="h4">
-                            Edit Appointment
-                        </Typography>
-                        <IconButton variant="plain" onClick={() => setEditModalOpen(false)}>
-                            <Close />
-                        </IconButton>
-                    </Box>
+                isEditMode={true}
+                refreshDashboard={refreshDashboard}
+                refreshAppointment={refreshAppointment}
+            />
 
-                    <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
-                    <FormControl sx={{ flex: 1 }}>
-                        <FormLabel>Title</FormLabel>
-                        <Input 
-                            value={title}
-                            sx={{ 
-                                bgcolor: theme.input.background,
-                                color: theme.input.text,
-                                '--Input-focusedHighlight': 'white',
-                            }}
-                        />
-                    </FormControl>
-
-                    <FormControl sx={{ flex: 1 }}>
-                        <FormLabel>Date</FormLabel>
-                        <Input
-                            value={formattedDate}
-                            sx={{
-                                bgcolor: theme.input.background,
-                                color: theme.input.text,
-                                '--Input-focusedHighlight': 'white',
-                            }}
-                        />
-                    </FormControl>
-                    </Box>
-
-                    <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
-                        <FormControl sx={{ flex: 1 }}>
-                            <FormLabel>Starting Time</FormLabel>
-                            <Input 
-                                value={startTime}
-                                sx={{ 
-                                    bgcolor: theme.input.background,
-                                    color: theme.input.text,
-                                    '--Input-focusedHighlight': 'white',
-                                }}
-                            />
-                        </FormControl>
-                        <FormControl sx={{ flex: 1 }}>
-                            <FormLabel>Ending Time</FormLabel>
-                            <Input
-                                value={endTime}
-                                sx={{
-                                    bgcolor: theme.input.background,
-                                    color: theme.input.text,
-                                    '--Input-focusedHighlight': 'white',
-                                }}
-                            />
-                        </FormControl>
-                    </Box>
-
-                    <FormControl sx={{ mb: 2 }}>
-                        <FormLabel>Location</FormLabel>
-                        <Input 
-                            value={location}
-                            sx={{ 
-                                bgcolor: theme.input.background,
-                                color: theme.input.text,
-                                '--Input-focusedHighlight': 'white',
-                            }}
-                        />
-                    </FormControl>
-
-                    <FormControl sx={{ mb: 2 }}>
-                        <FormLabel>Description</FormLabel>
-                        <Textarea 
-                            minRows={3}
-                            value={comment}
-                            sx={{ 
-                                bgcolor: theme.input.background,
-                                color: theme.input.text,
-                                '--Textarea-focusedHighlight': 'white',
-                            }}
-                        />
-                    </FormControl>
-
-                    <FormControl sx={{ mb: 2 }}>
-                        <FormLabel>Participants</FormLabel>
-                        <Input 
-                            value={participants}
-                            sx={{ 
-                                bgcolor: theme.input.background,
-                                color: theme.input.text,
-                                '--Input-focusedHighlight': 'white',
-                            }}
-                        />
-                    </FormControl>
-
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-                        <Button 
-                            variant="outlined" 
-                            color="neutral" 
-                            onClick={() => setEditModalOpen(false)}
-                        >
-                            Cancel
-                        </Button>
-                        <Button variant="solid" onClick={() => editReservation()}>Save Changes</Button>
-                    </Box>
-                </ModalDialog>
-            </Modal>
             {/* Modal for Delete Confirmation */}
             <Modal
                 open={deleteModalOpen}
@@ -587,7 +500,7 @@ input: {
                         <Button
                             variant="solid"
                             color="danger"
-                            onClick={handleDelete()}
+                            onClick={handleDelete}
                         >
                             Delete
                         </Button>

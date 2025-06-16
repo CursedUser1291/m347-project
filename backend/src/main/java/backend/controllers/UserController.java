@@ -2,10 +2,13 @@ package backend.controllers;
 
 import backend.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import backend.services.UserService;
+
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @RestController
 public class UserController {
@@ -20,5 +23,34 @@ public class UserController {
     @PostMapping("/signup")
     public User signup(@RequestParam String username, @RequestParam String password) {
         return userService.signup(username, password);
+    }
+
+    @GetMapping("/publicKeys")
+    public ResponseEntity<List<UUID>> getUserPublicKeys(@RequestParam String userId) {
+        UUID userUUID = UUID.fromString(userId);
+        List<UUID> publicKeys = userService.getUserPublicKeys(userUUID);
+        return ResponseEntity.ok(publicKeys);
+    }
+
+    @PatchMapping("/addPublicKey")
+    public ResponseEntity<String> addPublicKey(@RequestBody Map<String, String> payload) {
+        String userId = payload.get("userId");
+        String publicKey = payload.get("publicKey");
+
+        UUID userUUID;
+        UUID publicKeyUUID;
+        try {
+            userUUID = UUID.fromString(userId);
+            publicKeyUUID = UUID.fromString(publicKey);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Invalid UUID format for userId or publicKey");
+        }
+
+        User user = userService.addPublicKey(userUUID, publicKeyUUID);
+        if (user != null) {
+            return ResponseEntity.ok("Public key added successfully.");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
