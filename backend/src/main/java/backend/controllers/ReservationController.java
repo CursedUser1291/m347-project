@@ -27,6 +27,18 @@ public class ReservationController {
         return reservationService.getReservationsByUser(userID);
     }
 
+    @GetMapping("/reservations/prvKey")
+    public Reservation getReservationPrivateKey(@RequestParam String privateKey) {
+        UUID uuidPrivateKey = UUID.fromString(privateKey);
+        return reservationService.getReservationByPrivateKey(uuidPrivateKey);
+    }
+
+    @GetMapping("/reservations/pubKey")
+    public Reservation getReservationPublicKey(@RequestParam String publicKey) {
+        UUID uuidPublicKey = UUID.fromString(publicKey);
+        return reservationService.getReservationByPublicKey(uuidPublicKey);
+    }
+
     @PatchMapping("/reservations")
     public Reservation updateReservation(@RequestBody ReservationUpdateDTO dto) {
         LocalDate parsedDate = LocalDate.parse(dto.getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));

@@ -48,6 +48,7 @@ public class ReservationService {
             Reservation newReservation = new Reservation();
             newReservation.setId(UUID.randomUUID());
             newReservation.setPrivateKey(privateKey);
+            newReservation.setPublicKey(UUID.randomUUID());
             newReservation.setRoom(room);
             newReservation.setDate(date);
             newReservation.setStartTime(startTime);
@@ -66,5 +67,12 @@ public class ReservationService {
         }
 
         return reservationRepository.save(reservation);
+    }
+    public Reservation getReservationByPrivateKey(UUID privateKey) {
+        return reservationRepository.findByPrivateKey(privateKey);
+    }
+
+    public Reservation getReservationByPublicKey(UUID publicKey) {
+        return reservationRepository.findByPublicKey(publicKey);
     }
 }

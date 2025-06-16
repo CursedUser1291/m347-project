@@ -4,9 +4,12 @@ import {useEffect, useState} from "react";
 import {Box, Button} from "@mui/joy";
 import ReservationModal from "../components/ReservationModal.tsx";
 
+interface DashboardProps {
+    refresh: number;
+    refreshDashboard: () => void;
+}
 
-
-export function Dashboard() {
+export function Dashboard({ refresh, refreshDashboard }: DashboardProps) {
     type Reservation = {
         id: string;
         user: {
@@ -33,12 +36,7 @@ export function Dashboard() {
     };
 
     const [reservations, setReservations] = useState<Reservation[]>([]);
-    const [refresh, setRefresh] = useState(0);
     const [modalOpen, setModalOpen] = useState(false);
-
-    const refreshDashboard = () => {
-        setRefresh((prevKey) => prevKey + 1);
-    };
 
     useEffect(() => {
         if (!localStorage.getItem("user")) {

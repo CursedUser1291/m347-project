@@ -10,7 +10,9 @@ import {
     Input,
     Textarea,
     Button,
-    Snackbar
+    Snackbar,
+    Select,
+    Option
 } from '@mui/joy';
 import { Close, CheckCircle, Error } from '@mui/icons-material';
 import {participantsToArray} from "../utils/participantsToArray.ts";
@@ -22,6 +24,7 @@ interface ReservationModalProps {
     initialData?: any;
     isEditMode?: boolean;
     refreshDashboard: () => void;
+    refreshAppointment?: () => void;
 }
 
 const ReservationModal: React.FC<ReservationModalProps> = ({
@@ -31,6 +34,7 @@ const ReservationModal: React.FC<ReservationModalProps> = ({
         initialData = {},
         isEditMode = false,
         refreshDashboard,
+        refreshAppointment
     }) => {
     const [editedDate, setEditedDate] = useState(initialData.date || '');
     const [editedStartTime, setEditedStartTime] = useState(initialData.startTime || '');
@@ -142,6 +146,9 @@ const ReservationModal: React.FC<ReservationModalProps> = ({
             });
             if (response.ok) {
                 onClose();
+                if (refreshAppointment) {
+                    refreshAppointment();
+                }
                 refreshDashboard();
             }
         } catch {
@@ -216,25 +223,20 @@ const ReservationModal: React.FC<ReservationModalProps> = ({
 
                 <FormControl sx={{ mb: 2 }}>
                     <FormLabel>Location</FormLabel>
-                    <select
+                    <Select
                         value={editedLocation}
-                        onChange={(e) => { setEditedLocation(e.target.value); setRoomIsAvailable(false); }}
-                        style={{
-                            border: '1px solid #ccc',
-                            borderRadius: '4px',
-                            padding: '8px',
-                            width: '100%',
+                        onChange={(e, newValue) => {
+                            setEditedLocation(newValue ?? '');
+                            setRoomIsAvailable(false);
                         }}
+                        placeholder="Select a location"
                     >
-                        <option value="" disabled>
-                            Select a location
-                        </option>
                         {rooms.map((room) => (
-                            <option key={room.name} value={room.name}>
+                            <Option key={room.name} value={room.name}>
                                 {room.name}
-                            </option>
+                            </Option>
                         ))}
-                    </select>
+                    </Select>
                 </FormControl>
 
                 <FormControl sx={{ mb: 2 }}>
