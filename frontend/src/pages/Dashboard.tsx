@@ -1,6 +1,9 @@
 
 import AppointmentCard from "../components/AppointmentCard.tsx";
 import {useEffect, useState} from "react";
+import {Box, Button} from "@mui/joy";
+import ReservationModal from "../components/ReservationModal.tsx";
+
 
 
 export function Dashboard() {
@@ -30,13 +33,22 @@ export function Dashboard() {
     };
 
     const [reservations, setReservations] = useState<Reservation[]>([]);
+    const [refresh, setRefresh] = useState(0);
+    const [modalOpen, setModalOpen] = useState(false);
+
+    const refreshDashboard = () => {
+        setRefresh((prevKey) => prevKey + 1);
+    };
 
     useEffect(() => {
+        if (!localStorage.getItem("user")) {
+            window.location.href = "/login";
+        }
+
         const fetchReservations = async () => {
             const user = JSON.parse(localStorage.getItem("user") || "{}");
             if (user && user.id) {
                 try {
-                    console.log(user.id)
                     const response = await fetch(`http://localhost:8080/reservations?userID=${user.id}`);
                     if (response.ok) {
                         const data = await response.json();
@@ -51,10 +63,35 @@ export function Dashboard() {
         };
 
         fetchReservations();
-        }, []);
+        }, [refresh]);
     return (
         <div>
-            <h1>All Reservations</h1>
+            <Box display="flex" alignItems="center" gap={2} justifyContent="space-around">
+                {reservations.length === 0 ? (<h1>You Have No Reservations</h1>) : (<h1>All Reservations</h1>)}
+                <Button color={"neutral"} variant={"outlined"} onClick={() => setModalOpen(true)} sx={{ fontSize: '1.25rem' }}>
+                    Reserve a room
+                </Button>
+            </Box>
+
+            {modalOpen && (
+                <ReservationModal
+                    open={modalOpen}
+                    privateKey={""}
+                    onClose={() => setModalOpen(false)}
+                    initialData={{
+                        date: '',
+                        startTime: '',
+                        endTime: '',
+                        location: '',
+                        comment: '',
+                        participants: '',
+                    }}
+                    isEditMode={false}
+                    refreshDashboard={refreshDashboard}
+                />
+            )}
+
+            {/* Render all reservations */}
             {reservations.map((reservation, index) => (
                 <AppointmentCard
                     key={index}
@@ -71,6 +108,7 @@ export function Dashboard() {
                     participants={reservation.participants}
                     publicKey={reservation.publicKey}
                     privateKey={reservation.privateKey}
+                    refreshDashboard={refreshDashboard}
                 />
             ))}
         </div>

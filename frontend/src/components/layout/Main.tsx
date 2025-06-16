@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Box, CssBaseline, CssVarsProvider } from '@mui/joy';
 import Sidebar from './Sidebar';
 import Header from './Header';
-import { ProSidebarProvider } from 'react-pro-sidebar';
 
 interface MainProps {
   children: React.ReactNode;
@@ -22,9 +21,9 @@ const Main: React.FC<MainProps> = ({ children }) => {
       <CssBaseline />
       <Box sx={{ display: 'flex', minHeight: '100vh' }}>
         {/* Sidebar */}
-        <ProSidebarProvider>
+        <Box>
           <Sidebar open={sidebarOpen} onToggle={toggleSidebar} />
-        </ProSidebarProvider>
+        </Box>
 
         {/* Main content area */}
         <Box
