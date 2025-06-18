@@ -17,7 +17,6 @@ import ReservationModal from "./ReservationModal.tsx";
 import {useColorScheme} from "@mui/joy/styles";
 
 
-
 interface AppointmentCard {
     location: string;
     title: string;
@@ -158,7 +157,7 @@ input: {
                 }
                 refreshDashboard();
             } else {
-             const errorData = await response.json();
+                console.error('Refreshing', error);
             }
         } catch (error) {
             console.error('Error deleting appointment:', error);
