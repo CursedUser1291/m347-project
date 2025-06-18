@@ -15,4 +15,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, UUID> 
     Reservation findByPrivateKey(UUID privateKey);
 
     Collection<Reservation> findByRoom_IdAndDate(UUID id, LocalDate parsedDate);
+
+    Reservation findByPublicKey(UUID publicKey);
 }

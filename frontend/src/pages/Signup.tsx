@@ -29,6 +29,7 @@ const SignUp = () => {
             if (response.ok) {
                 const data = await response.json();
                 localStorage.setItem('user', JSON.stringify(data));
+                localStorage.removeItem('publicKeys')
                 window.location.href = '/';
             } else {
                 setError('Sign up failed. Please check your username and password.');

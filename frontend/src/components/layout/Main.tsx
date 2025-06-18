@@ -5,10 +5,11 @@ import Header from './Header';
 
 interface MainProps {
   children: React.ReactNode;
+  refreshDashboard: () => void;
 }
 
-const Main: React.FC<MainProps> = ({ children }) => {
-  // State for sidebar open/close
+const Main: React.FC<MainProps> = ({ children , refreshDashboard}) => {
+    // State for sidebar open/close
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   // Toggle sidebar
@@ -16,13 +17,14 @@ const Main: React.FC<MainProps> = ({ children }) => {
     setSidebarOpen(!sidebarOpen);
   };
 
+
   return (
     <CssVarsProvider>
       <CssBaseline />
       <Box sx={{ display: 'flex', minHeight: '100vh' }}>
         {/* Sidebar */}
         <Box>
-          <Sidebar open={sidebarOpen} onToggle={toggleSidebar} />
+          <Sidebar open={sidebarOpen} onToggle={toggleSidebar}  refreshDashboard={refreshDashboard}/>
         </Box>
 
         {/* Main content area */}

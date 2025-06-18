@@ -33,6 +33,9 @@ interface AppointmentCard {
     publicKey: string;
     privateKey: string;
     refreshDashboard: () => void;
+    refreshAppointment?: () => void;
+    mode?: "public" | "private";
+    setModalOpen?: (open: boolean) => void;
 }
 
 const AppointmentCard = ({
@@ -49,7 +52,10 @@ const AppointmentCard = ({
     participants,
     publicKey,
     privateKey,
-    refreshDashboard
+    refreshDashboard,
+    refreshAppointment,
+    mode = "private",
+    setModalOpen
 }: AppointmentCard) => {
 
     const theme = {
@@ -105,7 +111,6 @@ input: {
         setPassword('')
     }
 
-
     const checkPassword = async () => {
         const username = JSON.parse(localStorage.getItem('user') || '{}').name
         try {
@@ -148,6 +153,9 @@ input: {
             if (response.ok) {
                 setDeleteModalOpen(false);
 
+                if (setModalOpen) {
+                    setModalOpen(false);
+                }
                 refreshDashboard();
             } else {
              const errorData = await response.json();
@@ -234,10 +242,11 @@ input: {
                                 </Chip>
                             )}
                         </Box>
-                        <Box sx={{display: "flex", gap: 1, marginLeft: 'auto'}}>
+                        {mode === "private" && (
+                        <Box sx={{ display: "flex", gap: 1, marginLeft: 'auto' }}>
                             <Button
                                 size="sm"
-                                type={"submit"}
+                                type="submit"
                                 variant="outlined"
                                 color="danger"
                                 startDecorator={<Delete />}
@@ -256,8 +265,8 @@ input: {
                                 Edit
                             </Button>
                         </Box>
+                    )}
                     </Box>
-
                     <Typography level="h4" sx={{ mb: 2, fontWeight: 'bold' }}>
                         {title}
                     </Typography>
@@ -338,6 +347,7 @@ input: {
                                     <Lock fontSize="small" sx={{ mr: 1, verticalAlign: 'middle' }} /> 
                                     Private Key
                                 </Typography>
+                                {mode === "private" && (
                                 <Button 
                                     size="sm" 
                                     variant="outlined" 
@@ -347,6 +357,7 @@ input: {
                                 >
                                     Reveal
                                 </Button>
+                                )}
                             </Box>
                             <Typography sx={{ fontFamily: 'monospace', p: 1, bgcolor: 'rgba(0,0,0,0.05)', borderRadius: '4px' }}>
                                 ••••••••••••••••••••••••••••
@@ -464,6 +475,7 @@ input: {
                 }}
                 isEditMode={true}
                 refreshDashboard={refreshDashboard}
+                refreshAppointment={refreshAppointment}
             />
 
             {/* Modal for Delete Confirmation */}

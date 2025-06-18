@@ -1,10 +1,8 @@
 package backend.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -14,6 +12,9 @@ public class User {
     private String name;
     private String password;
 
+    @ElementCollection
+    private List<UUID> publicKeys;
+
     public User(UUID id, String name, String password) {
         this.id = id;
         this.name = name;
@@ -22,6 +23,14 @@ public class User {
 
     public User() {
 
+    }
+
+    public List<UUID> getPublicKeys() {
+        return publicKeys;
+    }
+
+    public void setPublicKeys(List<UUID> publicKeys) {
+        this.publicKeys = publicKeys;
     }
 
     public UUID getId() {
