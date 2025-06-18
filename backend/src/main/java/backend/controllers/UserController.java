@@ -2,10 +2,12 @@ package backend.controllers;
 
 import backend.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import backend.services.UserService;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -33,7 +35,7 @@ public class UserController {
     }
 
     @PatchMapping("/addPublicKey")
-    public ResponseEntity<String> addPublicKey(@RequestBody Map<String, String> payload) {
+    public ResponseEntity<?> addPublicKey(@RequestBody Map<String, String> payload) {
         String userId = payload.get("userId");
         String publicKey = payload.get("publicKey");
 
@@ -46,11 +48,18 @@ public class UserController {
             return ResponseEntity.badRequest().body("Invalid UUID format for userId or publicKey");
         }
 
-        User user = userService.addPublicKey(userUUID, publicKeyUUID);
-        if (user != null) {
-            return ResponseEntity.ok("Public key added successfully.");
-        } else {
-            return ResponseEntity.notFound().build();
+        try {
+            User user = userService.addPublicKey(userUUID, publicKeyUUID);
+            if (user != null) {
+                Map<String, Object> response = new HashMap<>();
+                response.put("message", "Public key added successfully.");
+                response.put("publicKey", publicKey);
+                return ResponseEntity.ok(response);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 }

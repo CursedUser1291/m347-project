@@ -32,6 +32,7 @@ interface AppointmentCard {
     refreshDashboard: () => void;
     refreshAppointment?: () => void;
     mode?: "public" | "private";
+    setModalOpen?: (open: boolean) => void;
 }
 
 const AppointmentCard = ({
@@ -50,7 +51,8 @@ const AppointmentCard = ({
     privateKey,
     refreshDashboard,
     refreshAppointment,
-    mode = "private"
+    mode = "private",
+    setModalOpen
 }: AppointmentCard) => {
 
     const theme = {
@@ -144,6 +146,9 @@ input: {
             });
             if (response.ok) {
                 setDeleteModalOpen(false);
+                if (setModalOpen) {
+                    setModalOpen(false);
+                }
                 refreshDashboard();
             } else {
                 console.error('Failed to delete reservation');

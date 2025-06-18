@@ -28,6 +28,7 @@ public class ReservationService {
     public void deleteReservation(UUID privateKey) {
         Reservation reservation = reservationRepository.findByPrivateKey(privateKey);
         if (reservation != null) {
+            reservation.setPublicKey(null);
             reservationRepository.delete(reservation);
         }
     }
