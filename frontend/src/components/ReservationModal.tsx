@@ -16,12 +16,22 @@ import {
 } from '@mui/joy';
 import { Close, CheckCircle, Error } from '@mui/icons-material';
 import {participantsToArray} from "../utils/participantsToArray.ts";
+import toast from 'react-hot-toast';
+
+interface ReservationInitialData {
+    date?: string;
+    startTime?: string;
+    endTime?: string;
+    location?: string;
+    comment?: string;
+    participants?: string;
+}
 
 interface ReservationModalProps {
     open: boolean;
     privateKey?: string;
     onClose: () => void;
-    initialData?: any;
+    initialData?: ReservationInitialData;
     isEditMode?: boolean;
     refreshDashboard: () => void;
     refreshAppointment?: () => void;
@@ -46,7 +56,6 @@ const ReservationModal: React.FC<ReservationModalProps> = ({
     const [loading, setLoading] = useState(false);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [rooms, setRooms] = useState<{ name: string }[]>([]);
-    const [error, setError] = useState<string | null>(null);
     const [timeSnackbarError, setTimeSnackbarError] = useState(false);
     const [timeErrorMsg, setTimeErrorMsg] = useState('');
 
@@ -145,14 +154,27 @@ const ReservationModal: React.FC<ReservationModalProps> = ({
                 }),
             });
             if (response.ok) {
+                if (isEditMode) {
+                    toast.success("Reservation updated successfully.", { duration: 3000 });
+                } else {
+                    toast.success("Reservation created successfully.", { duration: 3000 });
+                }
                 onClose();
                 if (refreshAppointment) {
                     refreshAppointment();
                 }
                 refreshDashboard();
+            } else {
+                const errorMessage = isEditMode ? 
+                    "Failed to update reservation. Please try again." : 
+                    "Failed to create reservation. Please try again.";
+                toast.error(errorMessage);
             }
-        } catch {
-            setError('An error occurred while trying to edit the reservation. Please try again.');
+        } catch (_) {
+            const errorMessage = isEditMode ? 
+                "An error occurred while updating the reservation. Please try again." : 
+                "An error occurred while creating the reservation. Please try again.";
+            toast.error(errorMessage);
         }
     }
 
@@ -197,6 +219,7 @@ const ReservationModal: React.FC<ReservationModalProps> = ({
                         value={editedDate}
                         onChange={(e) => { setEditedDate(e.target.value); setRoomIsAvailable(false); }}
                     />
+
                 </FormControl>
                 </Box>
 
