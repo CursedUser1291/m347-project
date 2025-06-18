@@ -212,6 +212,7 @@ const ReservationModal: React.FC<ReservationModalProps> = ({
                         value={editedDate}
                         onChange={(e) => { setEditedDate(e.target.value); setRoomIsAvailable(false); }}
                     />
+
                 </FormControl>
                 </Box>
 

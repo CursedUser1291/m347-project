@@ -6,6 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="d7b4bfb6-3c70-447e-9790-d36d92a2a72a" name="Changes" comment="Implement reservation fetching and display in Dashboard; refactor AppointmentCard component">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/components/AppointmentCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/AppointmentCard.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/components/ReservationModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/ReservationModal.tsx" afterDir="false" />
     </list>
@@ -126,7 +128,7 @@
       <workItem from="1748431049252" duration="719000" />
       <workItem from="1749645337195" duration="8021000" />
       <workItem from="1749990210825" duration="3181000" />
-      <workItem from="1750245668269" duration="294000" />
+      <workItem from="1750245668269" duration="3466000" />
     </task>
     <task id="LOCAL-00001" summary="Add routing and authentication components for user login and signup">
       <option name="closed" value="true" />

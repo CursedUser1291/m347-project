@@ -14,7 +14,9 @@ import {
 } from '@mui/joy';
 import {useState} from "react";
 import ReservationModal from "./ReservationModal.tsx";
-import toast, { Toaster } from 'react-hot-toast';
+import {useColorScheme} from "@mui/joy/styles";
+
+
 
 interface AppointmentCard {
     location: string;
@@ -132,6 +134,9 @@ input: {
         setEditModalOpen(false)
     }
 
+    const { mode } = useColorScheme();
+    const BadgeColor = mode === 'system' ? '#ce93d8' : mode === 'dark' ? '#ce93d8' : '#8e24aa';
+
     const handleDelete = async () => {
         try {
             const response = await fetch(`http://localhost:8080/reservations?privateKey=${privateKey}`, {
@@ -142,13 +147,13 @@ input: {
             });
             if (response.ok) {
                 setDeleteModalOpen(false);
-                toast.success("Reservation deleted successfully.", { duration: 3000 });
+
                 refreshDashboard();
             } else {
-                toast.error("Failed to delete reservation. Please try again.");
+             const errorData = await response.json();
             }
         } catch (error) {
-            toast.error("An error occurred while deleting the reservation. Please try again.");
+            console.error('Error deleting appointment:', error);
         }
     };
 
@@ -173,59 +178,57 @@ input: {
                         <Box sx={{ display: "flex", gap: 1, flexGrow: 1 }}>
                             <Chip 
                                 size="sm" 
-                                variant="outlined" 
+                                variant="outlined"
                                 startDecorator={<LocationOn />}
                                 sx={{
                                     borderColor: theme.chip.border,
                                     color: theme.chip.text,
+                                    bgcolor: theme.chip.background,
                                 }}
                             >
                                 {location}
                             </Chip>
                             {camera && (
-                                <Chip 
-                                    size="sm" 
+                                <Chip
+                                    size="sm"
                                     variant="outlined"
-                                    sx={{
-                                        borderColor: theme.chip.border,
-                                        color: theme.chip.text,
-                                    }}
+                                    sx={{ borderColor: BadgeColor,
+                                    color: BadgeColor,}}
                                 >
                                     Camera
                                 </Chip>
                             )}
                             {beamer && (
-                                <Chip 
-                                    size="sm" 
+                                <Chip
+                                    size="sm"
                                     variant="outlined"
                                     sx={{
-                                        borderColor: theme.chip.border,
-                                        color: theme.chip.text,
+                                        borderColor: BadgeColor,
+                                        color: BadgeColor,
                                     }}
                                 >
                                     Beamer
                                 </Chip>
+
                             )}
                             {touchscreen && (
-                                <Chip 
-                                    size="sm" 
+                                <Chip
+                                    size="sm"
                                     variant="outlined"
-                                    sx={{
-                                        borderColor: theme.chip.border,
-                                        color: theme.chip.text,
-                                    }}
+
+                                    sx={{ borderColor: BadgeColor,
+                                    color: BadgeColor,}}
                                 >
                                     Touchscreen
                                 </Chip>
                             )}
                             {whiteboard && (
-                                <Chip 
-                                    size="sm" 
+                                <Chip
+                                    size="sm"
                                     variant="outlined"
-                                    sx={{
-                                        borderColor: theme.chip.border,
-                                        color: theme.chip.text,
-                                    }}
+                                    color="warning"
+                                    sx={{ borderColor: BadgeColor ,
+                                    color: BadgeColor,}}
                                 >
                                     Whiteboard
                                 </Chip>
