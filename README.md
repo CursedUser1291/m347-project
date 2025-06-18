@@ -36,7 +36,13 @@ A full-stack room reservation system built with React (frontend) and Spring Boot
     ```sh
     cd backend
     ```
-2. Build and run the Spring Boot app:
+2. Change the database configuration
+    Change the database login configuration in `src/main/resources/application.properties` to match your MySQL Setup and User.
+
+3. Build and run the Spring Boot app:
+    ```sh
+    ./mvnw spring-boot:run
+    ```
    The backend will start on [http://localhost:8080](http://localhost:8080).
 
 ---
