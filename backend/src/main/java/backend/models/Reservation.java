@@ -1,7 +1,6 @@
 package backend.models;
 
 import jakarta.persistence.*;
-
 import java.sql.Time;
 import java.time.LocalDate;
 import java.util.UUID;
