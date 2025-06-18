@@ -70,5 +70,5 @@ A full-stack room reservation system built with React (frontend) and Spring Boot
 
 ## Development
 
-- Backend: Java, Spring Boot, JPA, H2 (in-memory DB)
+- Backend: Java, Spring Boot, JPA, MySQL (in-memory DB)
 - Frontend: React, TypeScript, Material Joy UI
