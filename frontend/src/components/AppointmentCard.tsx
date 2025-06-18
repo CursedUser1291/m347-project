@@ -34,7 +34,7 @@ interface AppointmentCard {
     privateKey: string;
     refreshDashboard: () => void;
     refreshAppointment?: () => void;
-    mode?: "public" | "private";
+    modeTheme?: "public" | "private";
     setModalOpen?: (open: boolean) => void;
 }
 
@@ -54,7 +54,7 @@ const AppointmentCard = ({
     privateKey,
     refreshDashboard,
     refreshAppointment,
-    mode = "private",
+    modeTheme = "private",
     setModalOpen
 }: AppointmentCard) => {
 
@@ -242,7 +242,7 @@ input: {
                                 </Chip>
                             )}
                         </Box>
-                        {mode === "private" && (
+                        {modeTheme === "private" && (
                         <Box sx={{ display: "flex", gap: 1, marginLeft: 'auto' }}>
                             <Button
                                 size="sm"
@@ -347,7 +347,7 @@ input: {
                                     <Lock fontSize="small" sx={{ mr: 1, verticalAlign: 'middle' }} /> 
                                     Private Key
                                 </Typography>
-                                {mode === "private" && (
+                                {modeTheme === "private" && (
                                 <Button 
                                     size="sm" 
                                     variant="outlined" 
