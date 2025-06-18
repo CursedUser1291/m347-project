@@ -499,11 +499,9 @@ input: {
                         >
                             Delete
                         </Button>
-
                     </Box>
                 </ModalDialog>
             </Modal>
-
         </Box>
     );
 }
