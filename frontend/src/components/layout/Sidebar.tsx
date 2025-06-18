@@ -87,7 +87,6 @@ const Sidebar = ({ open, onToggle, refreshDashboard }: SidebarProps) => {
 
     const usePublicKey = async (publicKey: string) => {
         const userId = JSON.parse(localStorage.getItem('user') || '{}').id;
-
         try {
             const response = await fetch(`http://localhost:8080/addPublicKey`, {
                 method: 'PATCH',
@@ -114,7 +113,6 @@ const Sidebar = ({ open, onToggle, refreshDashboard }: SidebarProps) => {
 
     const getUserPublicKeys = async () => {
         const userId = JSON.parse(localStorage.getItem('user') || '{}').id;
-
         try {
             const response = await fetch(`http://localhost:8080/publicKeys?userId=${userId}`, {
                 method: 'GET',
@@ -122,7 +120,6 @@ const Sidebar = ({ open, onToggle, refreshDashboard }: SidebarProps) => {
                     'Content-Type': 'application/json',
                 },
             });
-
             if (response.ok) {
                 const data = await response.json();
                 setPublicKeys(data);
@@ -275,6 +272,7 @@ const Sidebar = ({ open, onToggle, refreshDashboard }: SidebarProps) => {
                                     refreshDashboard={refreshDashboard}
                                     refreshAppointment={() => handleFetchReservation()}
                                     mode={"private"}
+                                    setModalOpen={setPrivateModalOpen}
                                 />
                             </ModalDialog>
                         </Modal>
