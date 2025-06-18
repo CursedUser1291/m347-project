@@ -173,7 +173,7 @@ const Sidebar = ({ open, onToggle, refreshDashboard }: SidebarProps) => {
           justifyContent: open ? 'space-between' : 'center',
         }}
       >
-{open && (
+{open ? (
   <Typography
     level="title-lg"
     sx={{
@@ -187,6 +187,8 @@ const Sidebar = ({ open, onToggle, refreshDashboard }: SidebarProps) => {
     <MeetingRoom />
     Ruumi
   </Typography>
+) : (
+  <MeetingRoom sx={{ color: 'primary.main' }} />
 )}
         <IconButton
           onClick={onToggle}
