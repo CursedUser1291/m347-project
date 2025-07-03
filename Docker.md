@@ -1,4 +1,4 @@
-# Fullstack-Projekt mit Spring Boot (Backend) & Vite + TypeScript (Frontend)
+# Fullstack room reservation mit Spring Boot (Backend) & Vite + TypeScript (Frontend)
 
 Dieses Projekt besteht aus einem **Spring Boot**-Backend mit einer **MySQL**-Datenbank sowie einem **Vite**-Frontend mit **TypeScript**. Beide Teile sind containerisiert mit **Docker** und können separat oder gemeinsam ausgeführt werden.
 
