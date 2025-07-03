@@ -105,20 +105,8 @@ CMD ["npm", "run", "preview", "--", "--host"]
 
 ## Ausführen mit Docker
 
-Du kannst beide Teile auch mit Docker Compose starten (optional):
+Du kannst beide Teile mit Docker Compose starten:
 
-```yaml
-# docker-compose.yml (optional)
-version: '3.8'
-
-services:
-  db:
-    image: mysql:8
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: mydb
-      MYSQL_USER: user
-      MYSQL_PASSWORD: pass
-    ports:
-      - "3306:3306"
+```
+Docker compose up
 ```
