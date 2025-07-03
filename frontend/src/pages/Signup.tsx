@@ -1,6 +1,7 @@
 
 import { Box, Button, Input, Typography, Card, CardContent } from '@mui/joy';
 import {useState} from "react";
+import { getApiUrl } from '../utils/getApiUrl.ts';
 
 const SignUp = () => {
     const [username, setUsername] = useState('');
@@ -15,7 +16,7 @@ const SignUp = () => {
         }
 
         try {
-            const response = await fetch('http://localhost:8080/signup', {
+            const response = await fetch(`${getApiUrl()}/signup`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',

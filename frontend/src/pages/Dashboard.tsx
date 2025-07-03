@@ -3,6 +3,7 @@ import AppointmentCard from "../components/AppointmentCard.tsx";
 import {useEffect, useState} from "react";
 import {Box, Button} from "@mui/joy";
 import ReservationModal from "../components/ReservationModal.tsx";
+import { getApiUrl } from '../utils/getApiUrl.ts';
 
 interface DashboardProps {
     refresh: number;
@@ -47,7 +48,7 @@ export function Dashboard({ refresh, refreshDashboard }: DashboardProps) {
             const user = JSON.parse(localStorage.getItem("user") || "{}");
             if (user && user.id) {
                 try {
-                    const response = await fetch(`http://localhost:8080/reservations?userID=${user.id}`);
+                    const response = await fetch(`${getApiUrl()}/reservations?userID=${user.id}`);
                     if (response.ok) {
                         const data = await response.json();
                         setReservations(data);

@@ -3,6 +3,7 @@ import {FaChevronLeft, FaChevronRight} from "react-icons/fa";
 import {ChevronRight, Key, MeetingRoom} from "@mui/icons-material";
 import {useEffect, useState} from "react";
 import AppointmentCard from "../AppointmentCard.tsx";
+import { getApiUrl } from '../../utils/getApiUrl.ts';
 
 interface SidebarProps {
     open: boolean;
@@ -42,11 +43,11 @@ const Sidebar = ({ open, onToggle, refreshDashboard }: SidebarProps) => {
     const [reservation, setReservation] = useState<Reservation | null>(null);
     const [publicModalOpen, setPublicModalOpen] = useState(false);
     const [privateModalOpen, setPrivateModalOpen] = useState(false);
-    const [error, setError] = useState("");
+    const [, setError] = useState("");
 
     const handleFetchReservation = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/reservations/prvKey?privateKey=${privateKey}`);
+            const response = await fetch(`${getApiUrl()}/reservations/prvKey?privateKey=${privateKey}`);
             if (response.ok) {
                 const data = await response.json();
                 setReservation(data);
@@ -63,7 +64,7 @@ const Sidebar = ({ open, onToggle, refreshDashboard }: SidebarProps) => {
 
     const handlePublicFetchReservation = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/reservations/pubKey?publicKey=${publicKey}`);
+            const response = await fetch(`${getApiUrl()}/reservations/pubKey?publicKey=${publicKey}`);
             if (response.ok) {
                 const data = await response.json();
                 setReservation(data);
@@ -88,7 +89,7 @@ const Sidebar = ({ open, onToggle, refreshDashboard }: SidebarProps) => {
     const usePublicKey = async (publicKey: string) => {
         const userId = JSON.parse(localStorage.getItem('user') || '{}').id;
         try {
-            const response = await fetch(`http://localhost:8080/addPublicKey`, {
+            const response = await fetch(`${getApiUrl()}/addPublicKey`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -114,7 +115,7 @@ const Sidebar = ({ open, onToggle, refreshDashboard }: SidebarProps) => {
     const getUserPublicKeys = async () => {
         const userId = JSON.parse(localStorage.getItem('user') || '{}').id;
         try {
-            const response = await fetch(`http://localhost:8080/publicKeys?userId=${userId}`, {
+            const response = await fetch(`${getApiUrl()}/publicKeys?userId=${userId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -236,7 +237,7 @@ const Sidebar = ({ open, onToggle, refreshDashboard }: SidebarProps) => {
                                     publicKey={reservation.publicKey}
                                     privateKey={reservation.privateKey}
                                     refreshDashboard={refreshDashboard}
-                                    mode={"public"}
+                                    modeTheme={"public"}
                                 />
                             </ModalDialog>
                         </Modal>
@@ -273,7 +274,7 @@ const Sidebar = ({ open, onToggle, refreshDashboard }: SidebarProps) => {
                                     privateKey={reservation.privateKey}
                                     refreshDashboard={refreshDashboard}
                                     refreshAppointment={() => handleFetchReservation()}
-                                    mode={"private"}
+                                    modeTheme={"private"}
                                     setModalOpen={setPrivateModalOpen}
                                 />
                             </ModalDialog>
@@ -286,7 +287,7 @@ const Sidebar = ({ open, onToggle, refreshDashboard }: SidebarProps) => {
             <FormControl sx={{ mb: 2 }}>
                 <Select
                     value={publicKey}
-                    onChange={(e, newValue) => {
+                    onChange={(_, newValue) => {
                         setPublicKey(newValue ?? '');
                     }}
                     sx={{ width: '80%', my: 2, ml: 2 }}

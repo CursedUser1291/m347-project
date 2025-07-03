@@ -43,7 +43,7 @@ A full-stack room reservation system built with React (frontend) and Spring Boot
     ```sh
     ./mvnw spring-boot:run
     ```
-   The backend will start on [http://localhost:8080](http://localhost:8080).
+   The backend will start on [http://backend:8080](http://backend:8080).
 
 ---
 
@@ -61,7 +61,7 @@ A full-stack room reservation system built with React (frontend) and Spring Boot
     ```sh
     npm run dev
     ```
-   The frontend will start on [http://localhost:5173](http://localhost:5173) (or similar).
+   The frontend will start on [http://backend:5173](http://backend:5173) (or similar).
 
 ---
 

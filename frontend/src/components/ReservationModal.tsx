@@ -17,6 +17,7 @@ import {
 import { Close, CheckCircle, Error } from '@mui/icons-material';
 import {participantsToArray} from "../utils/participantsToArray.ts";
 import toast from 'react-hot-toast';
+import { getApiUrl } from '../utils/getApiUrl.ts';
 
 interface ReservationInitialData {
     date?: string;
@@ -86,7 +87,7 @@ const ReservationModal: React.FC<ReservationModalProps> = ({
             setLoading(true);
             await new Promise(resolve => setTimeout(resolve, 500));
             setLoading(false);
-            const response = await fetch('http://localhost:8080/rooms/available', {
+            const response = await fetch('${getApiUrl()}/rooms/available', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -116,7 +117,7 @@ const ReservationModal: React.FC<ReservationModalProps> = ({
 
     const getAllRooms = async () => {
         try {
-            const response = await fetch('http://localhost:8080/rooms',
+            const response = await fetch('${getApiUrl()}/rooms',
                 {
                     method: 'GET',
                     headers: {
@@ -124,7 +125,7 @@ const ReservationModal: React.FC<ReservationModalProps> = ({
                     },
                 });
             if (response.ok) {
-                const data = (await response.json()).sort((a, b) => b.name.localeCompare(a.name));
+                const data = (await response.json() as { name: string }[]).sort((a: { name: string }, b: { name: string }) => b.name.localeCompare(a.name));
                 setRooms(data);
             } else {
                 console.error('Failed to fetch rooms:', response.statusText);
@@ -137,7 +138,7 @@ const ReservationModal: React.FC<ReservationModalProps> = ({
 
     const handleSave = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/reservations`, {
+            const response = await fetch(`${getApiUrl()}/reservations`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -170,7 +171,7 @@ const ReservationModal: React.FC<ReservationModalProps> = ({
                     "Failed to create reservation. Please try again.";
                 toast.error(errorMessage);
             }
-        } catch (_) {
+        } catch {
             const errorMessage = isEditMode ? 
                 "An error occurred while updating the reservation. Please try again." : 
                 "An error occurred while creating the reservation. Please try again.";
@@ -248,7 +249,7 @@ const ReservationModal: React.FC<ReservationModalProps> = ({
                     <FormLabel>Location</FormLabel>
                     <Select
                         value={editedLocation}
-                        onChange={(e, newValue) => {
+                        onChange={(_, newValue) => {
                             setEditedLocation(newValue ?? '');
                             setRoomIsAvailable(false);
                         }}

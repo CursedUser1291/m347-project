@@ -15,7 +15,7 @@ import {
 import {useState} from "react";
 import ReservationModal from "./ReservationModal.tsx";
 import {useColorScheme} from "@mui/joy/styles";
-
+import { getApiUrl } from '../utils/getApiUrl.ts';
 
 interface AppointmentCard {
     location: string;
@@ -113,7 +113,7 @@ input: {
     const checkPassword = async () => {
         const username = JSON.parse(localStorage.getItem('user') || '{}').name
         try {
-            const response = await fetch('http://localhost:8080/login', {
+            const response = await fetch('${getApiUrl()}/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -143,7 +143,7 @@ input: {
 
     const handleDelete = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/reservations?privateKey=${privateKey}`, {
+            const response = await fetch(`${getApiUrl()}/reservations?privateKey=${privateKey}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
