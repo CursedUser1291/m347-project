@@ -78,3 +78,6 @@ A full-stack room reservation system built with React (frontend) and Spring Boot
 
 - Backend: Java, Spring Boot, JPA, MySQL (in-memory DB)
 - Frontend: React, TypeScript, Material Joy UI
+
+## Docker 
+- A helper function to access the API URL from environment variables (VITE_API_URL) for consistent, environment-specific API calls in a Vite app.
