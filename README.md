@@ -12,7 +12,7 @@ Dieses Projekt besteht aus einem **Spring Boot**-Backend mit einer **MySQL**-Dat
 │   └── Dockerfile
 ├── frontend/        # Vite Frontend (TypeScript)
 │   └── Dockerfile
-├── docker-compose.yml (optional)
+├── docker-compose.yml 
 └── README.md
 ```
 ---
